@@ -26,7 +26,7 @@ const SimpleBadgeScroll = () => {
             {badges.map((badge, index) => (
               <div 
                 key={`first-${index}`}
-                className="badge-item px-4 py-2 bg-primary/10 text-primary rounded-full whitespace-nowrap text-sm font-medium border border-primary/20 hover:bg-primary/20 transition-colors"
+                className="badge-item px-4 py-2 bg-sky-600/10 text-sky-600 rounded-full whitespace-nowrap text-sm font-medium border border-sky-600/20 hover:bg-sky-600/20 transition-colors"
               >
                 {badge}
               </div>

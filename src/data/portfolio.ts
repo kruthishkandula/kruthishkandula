@@ -1,4 +1,4 @@
-// lib/skills-data.tsx
+
 import {
     SiExpress,
     SiFirebase,
@@ -28,7 +28,6 @@ export const about_details = {
     description: "I'm a passionate Full Stack Developer and Mobile Application Developer with expertise in building dynamic and responsive web applications. I love creating seamless user experiences and bringing innovative ideas to life through code.",
 }
 
-
 export const skillsData = {
     row1: [
         { name: 'React Native', icon: SiReact, color: '#61DAFB' },
@@ -54,13 +53,6 @@ export const skillsData = {
         { name: 'React Query', icon: SiReactquery, color: '#FF4154' },
     ]
 }
-
-// https://i.postimg.cc/SRvmHd7f/PHOTO-2025-10-12-20-54-45.jpg
-// https://i.postimg.cc/CLRhbyS7/PHOTO-2025-10-12-20-55-18.jpg
-// https://i.postimg.cc/3Jk82MYt/PHOTO-2025-10-12-20-56-17.jpg
-// https://i.postimg.cc/nVRVsVbY/PHOTO-2025-10-12-20-57-53.jpg
-// https://i.postimg.cc/4dFdTXXv/6313a1f4-d346-4a16-9002-322cc9d5c799.jpg
-// https://i.postimg.cc/bYCYGYc0/PHOTO-2025-10-12-20-59-42.jpg
 
 export const ProjectsData = [
     {

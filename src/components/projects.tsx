@@ -79,7 +79,7 @@ const Projects = () => {
         >
           <button
             onClick={closeModal}
-            className="absolute top-10 right-20 z-10 p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors"
+            className="absolute top-2 right-10 lg:top-10  xl:right-50 z-10 p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors"
           >
             <X size={40} />
           </button>
@@ -215,7 +215,7 @@ const Projects = () => {
                   {selectedProject.tech.map((tech: string, techIndex: number) => (
                     <span
                       key={techIndex}
-                      className="glass-tag px-3 py-1.5 text-sm rounded-full hover:scale-105 transition-transform"
+                      className="glass-tag bg-pink-600 px-3 py-1.5 text-sm rounded-full hover:scale-105 transition-transform"
                     >
                       {tech}
                     </span>
@@ -225,14 +225,14 @@ const Projects = () => {
 
               {/* Project Type & Category */}
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                <div>
+                <Button variant={'secondary'} style={{width: '50%'}}>
                   <span className="font-medium">Category: </span>
                   <span>{selectedProject.category}</span>
-                </div>
-                <div>
+                </Button>
+                <Button variant={'secondary'}>
                   <span className="font-medium">Type: </span>
                   <span>{selectedProject.type}</span>
-                </div>
+                </Button>
               </div>
             </div>
           </div>
