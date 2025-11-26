@@ -52,6 +52,24 @@ export default function RootLayout({
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Person',
+              name: 'Kruthish Kandula',
+              url: 'https://kruthishkandula-portfolio.onrender.com',
+              sameAs: [
+                'https://twitter.com/kruthish',
+                'https://linkedin.com/in/kruthish',
+                'https://github.com/kruthish'
+              ],
+              jobTitle: 'Full Stack Developer',
+              image: 'https://metatags.io/images/meta-tags.png',
+            })
+          }}
+        />
       </head>
       <body className={inter.className}>
         <ThemeProvider

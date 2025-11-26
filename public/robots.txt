@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /private/
+
+Sitemap: https://kruthishkandula-portfolio.onrender.com/sitemap.xml
