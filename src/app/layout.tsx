@@ -6,8 +6,30 @@ import { ThemeProvider } from '@/components/ui/theme/theme-provider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Your Portfolio',
-  description: 'Modern portfolio with Next.js and shadcn/ui',
+  title: 'Kruthish Portfolio | Full Stack Developer',
+  description: 'Modern portfolio showcasing full stack development projects and expertise. Built with Next.js and shadcn/ui.',
+  keywords: ['portfolio', 'developer', 'full stack', 'Next.js', 'React'],
+  authors: [{ name: 'Kruthish' }],
+  creator: 'Kruthish',
+  publisher: 'Kruthish',
+  robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://kruthish.dev',
+    title: 'Kruthish Portfolio | Full Stack Developer',
+    description: 'Modern portfolio showcasing full stack development projects and expertise.',
+    siteName: 'Kruthish Portfolio',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Kruthish Portfolio',
+    description: 'Full Stack Developer Portfolio',
+    creator: '@kruthish',
+  },
+  alternates: {
+    canonical: 'https://kruthish.dev',
+  },
 }
 
 export default function RootLayout({
@@ -17,6 +39,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
