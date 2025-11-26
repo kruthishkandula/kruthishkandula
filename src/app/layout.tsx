@@ -16,19 +16,28 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://kruthish.dev',
+    url: 'https://kruthishkandula-portfolio.onrender.com/',
     title: 'Kruthish Portfolio | Full Stack Developer',
-    description: 'Modern portfolio showcasing full stack development projects and expertise.',
+    description: 'Modern portfolio showcasing full stack development projects and expertise. Built with Next.js and shadcn/ui.',
     siteName: 'Kruthish Portfolio',
+    images: [
+      {
+        url: 'https://metatags.io/images/meta-tags.png',
+        width: 1200,
+        height: 630,
+        alt: 'Kruthish Portfolio',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kruthish Portfolio',
-    description: 'Full Stack Developer Portfolio',
+    title: 'Kruthish Portfolio | Full Stack Developer',
+    description: 'Modern portfolio showcasing full stack development projects and expertise. Built with Next.js and shadcn/ui.',
     creator: '@kruthish',
+    images: ['https://metatags.io/images/meta-tags.png'],
   },
   alternates: {
-    canonical: 'https://kruthish.dev',
+    canonical: 'https://kruthishkandula-portfolio.onrender.com/',
   },
 }
 
