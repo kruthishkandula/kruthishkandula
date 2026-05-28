@@ -8,6 +8,7 @@ import { X, ExternalLink, Calendar, Users, Award } from "lucide-react"
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState<any | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [lightbox, setLightbox] = useState<{ open: boolean, img: string | null }>({ open: false, img: null })
 
   const openModal = (project: any) => {
     setSelectedProject(project)
@@ -25,46 +26,47 @@ const Projects = () => {
     <section id="projects" className="min-h-screen py-20 pt-30 px-6">
       <div className="container mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">My Projects</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {ProjectsData.map((project, index) => (
             <div
               key={index}
-              className="glass-card p-6 hover:scale-105 transition-transform duration-300 cursor-pointer"
+              className="rounded-3xl shadow-xl bg-white/80 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col group overflow-hidden"
               onClick={() => openModal(project)}
             >
-              <img
-                src={project.imageUrl}
-                alt={project.title}
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <h3 className="text-xl font-semibold mb-3">{project.title}</h3>
-              <p className="text-muted-foreground mb-4 line-clamp-2">
-                {project.short_description}
-              </p>
-
-              {/* Status Badge */}
-              <div className="flex items-center justify-between mb-4">
-                <span className={`px-3 py-1 text-xs rounded-full ${project.status === 'Live Production' ? 'bg-green-500/20 text-green-400' :
-                    project.status === 'In Development' ? 'bg-yellow-500/20 text-yellow-400' :
-                      'bg-blue-500/20 text-blue-400'
-                  }`}>
-                  {project.status}
-                </span>
-                <span className="text-xs text-muted-foreground">{project.category}</span>
+              <div className="relative w-full aspect-[16/9] overflow-hidden">
+                <img
+                  src={project.imageUrl}
+                  alt={project.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <span className={`absolute top-4 right-4 px-3 py-1 text-xs rounded-full font-semibold shadow-md ${project.status === 'Live Production' ? 'bg-green-500/90 text-white' : project.status === 'In Development' ? 'bg-yellow-500/90 text-white' : 'bg-blue-500/90 text-white'}`}>{project.status}</span>
               </div>
-
-              {/* Tech Stack Preview (first 3) */}
-              <div className="flex flex-wrap gap-2">
-                {project.tech.slice(0, 3).map((tech, techIndex) => (
-                  <span key={techIndex} className="glass-tag px-3 py-1 text-sm rounded-full">
-                    {tech}
-                  </span>
-                ))}
-                {project.tech.length > 3 && (
-                  <span className="glass-tag px-3 py-1 text-sm rounded-full">
-                    +{project.tech.length - 3} more
-                  </span>
-                )}
+              <div className="flex-1 flex flex-col p-6 gap-3">
+                <h3 className="text-2xl font-bold mb-1 group-hover:text-primary transition-colors">{project.title}</h3>
+                <p className="text-muted-foreground mb-2 line-clamp-2">{project.short_description}</p>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {project.tech.slice(0, 4).map((tech, techIndex) => (
+                    <span key={techIndex} className="bg-pink-600/10 text-pink-700 dark:text-pink-300 px-3 py-1 text-xs rounded-full font-medium">
+                      {tech}
+                    </span>
+                  ))}
+                  {project.tech.length > 4 && (
+                    <span className="bg-zinc-200 dark:bg-zinc-700 px-3 py-1 text-xs rounded-full font-medium">
+                      +{project.tech.length - 4} more
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+                  <Calendar size={14} />
+                  <span>{project.duration}</span>
+                  <span className="mx-2">•</span>
+                  <Users size={14} />
+                  <span>{project.team_size}</span>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-auto">
+                  <span className="bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded text-xs">{project.category}</span>
+                  <span className="bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded text-xs">{project.type}</span>
+                </div>
               </div>
             </div>
           ))}
@@ -74,166 +76,132 @@ const Projects = () => {
       {/* Modal Overlay */}
       {isModalOpen && selectedProject && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/20 backdrop-blur-lg"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xl"
           onClick={closeModal}
         >
           <button
             onClick={closeModal}
-            className="absolute top-2 right-10 lg:top-10  xl:right-50 z-10 p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors"
+            className="absolute top-4 right-8 z-20 p-2 rounded-full bg-black/40 hover:bg-black/70 transition-colors"
+            aria-label="Close"
           >
-            <X size={40} />
+            <X size={36} />
           </button>
           <div
-            className="glass-card max-w-4xl w-full max-h-[90vh] overflow-y-auto p-0 relative"
-            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl max-w-5xl w-full relative flex flex-col md:flex-row"
+            style={{ maxHeight: '92vh' }}
+            onClick={e => e.stopPropagation()}
           >
-            {/* Close Button */}
-
-            {/* Modal Content */}
-            <div className="p-6">
-              {/* Header Section */}
-              <div className="flex flex-col md:flex-row gap-6 mb-6">
-                <img
-                  src={selectedProject.imageUrl}
-                  alt={selectedProject.title}
-                  className="w-full md:w-1/3 h-48 object-cover rounded-lg"
-                />
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-2xl md:text-3xl font-bold">{selectedProject.title}</h3>
-                    <span className={`px-3 py-1 text-sm rounded-full ml-4 ${selectedProject.status === 'Live Production' ? 'bg-green-500/20 text-green-400' :
-                        selectedProject.status === 'In Development' ? 'bg-yellow-500/20 text-yellow-400' :
-                          'bg-blue-500/20 text-blue-400'
-                      }`}>
-                      {selectedProject.status}
-                    </span>
-                  </div>
-                  <p className="text-lg text-accent-foreground mb-4">
-                    {selectedProject.short_description}
-                  </p>
-
-                  {/* Project Meta Info */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Calendar size={16} />
-                      <span>{selectedProject.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Users size={16} />
-                      <span>{selectedProject.team_size} • {selectedProject.role}</span>
-                    </div>
-                  </div>
-
-                  {/* Links */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {selectedProject.links?.map((item: any, index: any) => (
-                      <a
-                        key={index}
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Button variant="secondary" size="sm" className="flex items-center gap-2">
-                          <ExternalLink size={14} />
-                          <span>{item.name}</span>
-                        </Button>
-                      </a>
+            {/* Left: Images */}
+            <div className="md:w-2/5 w-full p-6 flex flex-col gap-4 border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800">
+              <div className="w-full">
+                {selectedProject.images && selectedProject.images.length > 1 ? (
+                  <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-2 scrollbar-thin scrollbar-thumb-rounded-lg scrollbar-thumb-gray-300">
+                    {selectedProject.images.map((img: string, idx: number) => (
+                      <div key={idx} className="relative flex-shrink-0 snap-center group" style={{ width: '180px', aspectRatio: '9/16' }}>
+                        <img
+                          src={img}
+                          alt={`${selectedProject.title} ${idx + 1}`}
+                          className="w-full h-auto max-h-72 object-contain rounded-2xl shadow-lg border-2 border-transparent group-hover:border-primary transition-all duration-300 cursor-pointer bg-neutral-100"
+                          onClick={() => setLightbox({ open: true, img })}
+                        />
+                      </div>
                     ))}
                   </div>
-                </div>
+                ) : (
+                  <div className="flex justify-center">
+                    <img
+                      src={selectedProject.imageUrl || (selectedProject.images && selectedProject.images[0])}
+                      alt={selectedProject.title}
+                      className="w-auto h-auto max-h-72 object-contain rounded-2xl shadow-lg border-2 border-transparent hover:border-primary transition-all duration-300 cursor-pointer bg-neutral-100"
+                      onClick={() => setLightbox({ open: true, img: selectedProject.imageUrl || (selectedProject.images && selectedProject.images[0]) })}
+                    />
+                  </div>
+                )}
+                {lightbox.open && (
+                  <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={() => setLightbox({ open: false, img: null })}>
+                    <img src={lightbox.img!} alt="Full Size" className="max-w-[90vw] max-h-[90vh] rounded-2xl shadow-2xl border-4 border-white object-contain" />
+                  </div>
+                )}
               </div>
-
-              {/* Detailed Description */}
-              <div className="mb-6">
-                <h4 className="text-xl font-semibold mb-3">Project Overview</h4>
-                <p className="text-accent-foreground leading-relaxed">
-                  {selectedProject.description}
-                </p>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {selectedProject.tech.map((tech: string, techIndex: number) => (
+                  <span key={techIndex} className="bg-pink-600/10 text-pink-700 dark:text-pink-300 px-3 py-1 text-xs rounded-full font-medium">
+                    {tech}
+                  </span>
+                ))}
               </div>
-
-              {/* Features Section */}
+            </div>
+            {/* Right: Details */}
+            <div className="flex-1 p-6 flex flex-col gap-4 overflow-y-auto" style={{ maxHeight: '92vh' }}>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-2">
+                <h3 className="text-3xl font-bold text-zinc-900 dark:text-white mb-1">{selectedProject.title}</h3>
+                <span className={`px-3 py-1 text-sm rounded-full font-semibold shadow ${selectedProject.status === 'Live Production' ? 'bg-green-500/90 text-white' : selectedProject.status === 'In Development' ? 'bg-yellow-500/90 text-white' : 'bg-blue-500/90 text-white'}`}>{selectedProject.status}</span>
+              </div>
+              <p className="text-lg text-zinc-700 dark:text-zinc-200 mb-2">{selectedProject.short_description}</p>
+              <div className="flex flex-wrap gap-3 text-xs text-zinc-500 dark:text-zinc-400 mb-2">
+                <span className="flex items-center gap-1"><Calendar size={14} /> {selectedProject.duration}</span>
+                <span className="flex items-center gap-1"><Users size={14} /> {selectedProject.team_size}</span>
+                <span className="flex items-center gap-1 font-medium">{selectedProject.category}</span>
+                <span className="flex items-center gap-1 font-medium">{selectedProject.type}</span>
+              </div>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {selectedProject.links?.map((item: any, index: any) => (
+                  <a
+                    key={index}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <Button variant="secondary" size="sm" className="flex items-center gap-2">
+                      <ExternalLink size={14} />
+                      <span>{item.name}</span>
+                    </Button>
+                  </a>
+                ))}
+              </div>
+              <div className="mb-4">
+                <h4 className="text-xl font-semibold mb-2 text-zinc-900 dark:text-white">Project Overview</h4>
+                <p className="text-zinc-700 dark:text-zinc-200 leading-relaxed">{selectedProject.description}</p>
+              </div>
               {selectedProject.features && (
-                <div className="mb-6">
-                  <h4 className="text-xl font-semibold mb-3">Key Features</h4>
-                  <div className="grid md:grid-cols-2 gap-2">
+                <div className="mb-2">
+                  <h4 className="text-lg font-semibold mb-2 text-zinc-900 dark:text-white">Key Features</h4>
+                  <ul className="grid md:grid-cols-2 gap-2 list-disc list-inside">
                     {selectedProject.features.map((feature: string, index: number) => (
-                      <div key={index} className="flex items-center gap-2 text-sm">
-                        <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0" />
-                        <span>{feature}</span>
-                      </div>
+                      <li key={index} className="text-sm text-zinc-700 dark:text-zinc-200">{feature}</li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               )}
-
-              {/* Achievements Section */}
               {selectedProject.achievements && (
-                <div className="mb-6">
-                  <h4 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                    <Award size={20} />
-                    Key Achievements
-                  </h4>
-                  <div className="grid md:grid-cols-2 gap-2">
+                <div className="mb-2">
+                  <h4 className="text-lg font-semibold mb-2 flex items-center gap-2 text-zinc-900 dark:text-white"><Award size={20} />Achievements</h4>
+                  <ul className="grid md:grid-cols-2 gap-2 list-disc list-inside">
                     {selectedProject.achievements.map((achievement: string, index: number) => (
-                      <div key={index} className="flex items-center gap-2 text-sm">
-                        <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
-                        <span>{achievement}</span>
-                      </div>
+                      <li key={index} className="text-sm text-green-700 dark:text-green-300">{achievement}</li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               )}
-
-              {/* Platforms Section (for projects like GroceryPlus) */}
               {selectedProject.platforms && (
-                <div className="mb-6">
-                  <h4 className="text-xl font-semibold mb-3">Platform Architecture</h4>
+                <div className="mb-2">
+                  <h4 className="text-lg font-semibold mb-2 text-zinc-900 dark:text-white">Platform Architecture</h4>
                   <div className="grid gap-4">
                     {Object.entries(selectedProject.platforms).map(([key, platform]: [string, any]) => (
-                      <div key={key} className="glass-card p-4">
+                      <div key={key} className="bg-zinc-100 dark:bg-zinc-800 rounded-xl p-4">
                         <h5 className="font-semibold mb-2">{platform.name}</h5>
-                        <p className="text-sm text-muted-foreground mb-3">{platform.description}</p>
-                        <div className="grid md:grid-cols-2 gap-1">
+                        <p className="text-sm text-zinc-600 dark:text-zinc-300 mb-3">{platform.description}</p>
+                        <ul className="grid md:grid-cols-2 gap-1 list-disc list-inside">
                           {platform.features.slice(0, 6).map((feature: string, index: number) => (
-                            <div key={index} className="flex items-center gap-2 text-xs">
-                              <div className="w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0" />
-                              <span>{feature}</span>
-                            </div>
+                            <li key={index} className="text-xs text-zinc-700 dark:text-zinc-200">{feature}</li>
                           ))}
-                        </div>
+                        </ul>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
-
-              {/* Technology Stack */}
-              <div className="mb-6">
-                <h4 className="text-xl font-semibold mb-3">Technology Stack</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProject.tech.map((tech: string, techIndex: number) => (
-                    <span
-                      key={techIndex}
-                      className="glass-tag bg-pink-600 px-3 py-1.5 text-sm rounded-full hover:scale-105 transition-transform"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Project Type & Category */}
-              <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                <Button variant={'secondary'} style={{width: '50%'}}>
-                  <span className="font-medium">Category: </span>
-                  <span>{selectedProject.category}</span>
-                </Button>
-                <Button variant={'secondary'}>
-                  <span className="font-medium">Type: </span>
-                  <span>{selectedProject.type}</span>
-                </Button>
-              </div>
             </div>
           </div>
         </div>

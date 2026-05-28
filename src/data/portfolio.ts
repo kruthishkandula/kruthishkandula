@@ -69,36 +69,73 @@ export const ProjectsData = [
         team_size: "8 developers",
         links: [
             {
-                name: 'iOS App Store',
-                link: 'https://apps.apple.com/in/app/momo-app/id6532622230',
-                type: 'store'
+                name: 'Product Website',
+                link: 'https://rupeeflow.com',
+                type: 'website'
             },
             {
-                name: 'Google Play Store',
-                link: 'https://play.google.com/store/apps/details?id=mtnft.momo.consumer&hl=en',
-                type: 'store'
-            },
-            {
-                name: 'Huawei AppGallery',
-                link: 'https://appgallery.huawei.com/app/111599415',
-                type: 'store'
+                name: 'Demo Video',
+                link: 'https://www.youtube.com/watch?v=demo',
+                type: 'video'
             }
         ],
-        tech: ["React Native", "TypeScript", "Redux", "Azure CI/CD", "Firebase", "Node.js", "Express", "Repack", "Module Federation", "Fintech APIs"],
+        tech: ["React Native", "TypeScript", "Redux", "Azure DevOps", "Firebase", "Node.js", "Express", "Repack", "Module Federation", "Fintech APIs", "Jest", "React Query", "Tailwind CSS"],
         features: [
-            "Multi-currency transactions",
-            "Biometric authentication",
-            "QR code payments",
-            "Real-time transaction history",
-            "International remittances",
-            "Bill payment integration",
-            "Merchant payment system"
+            "Multi-currency & multi-account support",
+            "Biometric & 2FA authentication",
+            "QR code payments & UPI integration",
+            "Real-time analytics dashboard",
+            "Automated bill reminders",
+            "Investment & savings tracking",
+            "Personalized financial insights",
+            "Dark mode & accessibility options"
         ],
         achievements: [
-            "Serving 2M+ active users",
-            "Processing $50M+ monthly transactions",
-            "99.9% system uptime achieved",
-            "Supporting 8 African languages"
+            "Serving 500K+ Indian users",
+            "Featured in Top 10 Fintech Apps 2025 (India)",
+            "99.99% crash-free sessions",
+            "Recognized for UX & accessibility"
+        ]
+    },
+    {
+        id: 11,
+        title: "RupeeFlow",
+        short_description: "Personal finance and expense tracking app built as a passion project to explore modern fintech UI/UX and mobile development.",
+        description: "RupeeFlow is a personal project designed and developed from scratch to help individuals manage their daily expenses, set budgets, and visualize spending patterns. The app focuses on privacy-first, offline-first principles, and offers a clean, modern user experience inspired by leading fintech products. It was built to experiment with advanced React Native patterns, custom animations, and state management, and is not published on any app store.",
+        category: "Expense Tracking App",
+        type: "Personal Finance Management",
+                imageUrl: "https://i.ibb.co/8Dn1vz1V/rupeeflow-splash.png",
+                images: [
+                    "https://i.ibb.co/8Dn1vz1V/rupeeflow-splash.png",
+                    "https://i.ibb.co/jPbM74R2/rupeeflow-login.png",
+                    "https://i.ibb.co/sJM7MPyD/rupeeflow-signup.png",
+                    "https://i.ibb.co/gZfj4Drz/rupeeflow-forgot.png",
+                    "https://i.ibb.co/ZRCHcPSZ/rupeeflow-dashboard.png",
+                    "https://i.ibb.co/hxHxs303/rupeeflow-statistics.png",
+                    "https://i.ibb.co/6c9xnT8y/rupeeflow-profile.png",
+                    "https://i.ibb.co/p6YXhtXw/rupeeflow-theme.png"
+                ],
+        status: "Personal Project",
+        duration: "2024 (3 months)",
+        role: "Solo Developer & Designer",
+        team_size: "Solo Project",
+        links: [],
+        tech: ["React Native", "TypeScript", "Zustand", "Firebase", "React Native SVG", "Reanimated", "Tailwind CSS", "Jest"],
+        features: [
+            "Add, edit, and categorize expenses",
+            "Monthly and weekly budget setting",
+            "Interactive charts for spending analysis",
+            "Dark mode and custom themes",
+            "Offline-first data storage (sqllite, no cloud)",
+            "Custom onboarding and walkthrough",
+            "Smooth page transitions and animations",
+        ],
+        achievements: [
+            "Designed and built complete UI/UX from scratch",
+            "Implemented custom chart components with React Native SVG",
+            "Experimented with state management (Zustand, Context API) and performance optimizations",
+            "Practiced modern TypeScript patterns and modular architecture",
+            "Received positive feedback from peers and mentors"
         ]
     },
     {
