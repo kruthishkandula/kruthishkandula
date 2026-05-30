@@ -69,14 +69,19 @@ export const ProjectsData = [
         team_size: "8 developers",
         links: [
             {
-                name: 'Product Website',
-                link: 'https://rupeeflow.com',
-                type: 'website'
+                name: 'iOS App Store',
+                link: 'https://apps.apple.com/in/app/momo-app/id6532622230',
+                type: 'store'
             },
             {
-                name: 'Demo Video',
-                link: 'https://www.youtube.com/watch?v=demo',
-                type: 'video'
+                name: 'Google Play Store',
+                link: 'https://play.google.com/store/apps/details?id=mtnft.momo.consumer&hl=en',
+                type: 'store'
+            },
+            {
+                name: 'Huawei AppGallery',
+                link: 'https://appgallery.huawei.com/app/111599415',
+                type: 'store'
             }
         ],
         tech: ["React Native", "TypeScript", "Redux", "Azure DevOps", "Firebase", "Node.js", "Express", "Repack", "Module Federation", "Fintech APIs", "Jest", "React Query", "Tailwind CSS"],
@@ -168,7 +173,7 @@ export const ProjectsData = [
             },
             {
                 name: 'GitHub Repository',
-                link: 'https://github.com/kruthish/groceryplus',
+                link: 'https://github.com/kruthishkandula/Grocery-web',
                 type: 'source'
             }
         ],
@@ -206,11 +211,6 @@ export const ProjectsData = [
                 name: 'Live Demo',
                 link: 'https://kandulareact24.ccbp.tech/',
                 type: 'demo'
-            },
-            {
-                name: 'GitHub Repository',
-                link: 'https://github.com/kruthish/ipl-dashboard',
-                type: 'source'
             }
         ],
         tech: ["React.js", "TypeScript", "Tailwind CSS", "Chart.js", "REST APIs", "Responsive Design"],
@@ -246,11 +246,6 @@ export const ProjectsData = [
                 name: 'Play Game',
                 link: 'https://kandulareact18.ccbp.tech/',
                 type: 'demo'
-            },
-            {
-                name: 'Source Code',
-                link: 'https://github.com/kruthish/emoji-game',
-                type: 'source'
             }
         ],
         tech: ["React.js", "TypeScript", "Tailwind CSS", "CSS Animations", "Local Storage", "Game Logic"],
@@ -286,11 +281,6 @@ export const ProjectsData = [
                 name: 'Live Application',
                 link: 'https://kandulareact26.ccbp.tech/',
                 type: 'demo'
-            },
-            {
-                name: 'Project Repository',
-                link: 'https://github.com/kruthish/events-registration',
-                type: 'source'
             }
         ],
         tech: ["React.js", "TypeScript", "Tailwind CSS", "Form Validation", "Local Storage", "Date Management"],
@@ -326,11 +316,6 @@ export const ProjectsData = [
                 name: 'Try Demo',
                 link: 'https://kandulareact16.ccbp.tech/',
                 type: 'demo'
-            },
-            {
-                name: 'View Code',
-                link: 'https://github.com/kruthish/appointment-scheduler',
-                type: 'source'
             }
         ],
         tech: ["React.js", "TypeScript", "Tailwind CSS", "Date Picker", "Calendar Integration", "Form Management"],
@@ -366,11 +351,6 @@ export const ProjectsData = [
                 name: 'Launch App',
                 link: 'https://kandulareact17.ccbp.tech/',
                 type: 'demo'
-            },
-            {
-                name: 'GitHub Code',
-                link: 'https://github.com/kruthish/money-manager',
-                type: 'source'
             }
         ],
         tech: ["React.js", "TypeScript", "Tailwind CSS", "Chart.js", "Local Storage", "Financial Calculations"],
