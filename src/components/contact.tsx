@@ -1,3 +1,5 @@
+'use client'
+
 import SocialLinks from "./ui/SocialLinks"
 import analyticsEvents from '@/lib/analytics.json';
 import { useEffect } from 'react';

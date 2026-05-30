@@ -25,7 +25,13 @@ const Home = () => {
       if (analytics) {
         logEvent(analytics, analyticsEvents.VIEW_HOME);
         console.log('Logged:', analyticsEvents.VIEW_HOME);
+      } else {
+        alert('Firebase Analytics not initialized or not supported. Please check your production environment and config.');
+        console.warn('Firebase Analytics not initialized or not supported.');
       }
+    }).catch((err) => {
+      alert('Firebase Analytics error: ' + err);
+      console.error('Firebase Analytics error:', err);
     });
   }, []);
 
@@ -42,7 +48,13 @@ const Home = () => {
         </p>
         <RoleCarousel />
         <Button variant={'default'} onClick={() => {
-          logEvent(getAnalytics(), analyticsEvents.VIEW_PROJECTS);
+          const analytics = getAnalytics();
+          if (analytics) {
+            logEvent(analytics, analyticsEvents.VIEW_PROJECTS);
+            console.log('Logged:', analyticsEvents.VIEW_PROJECTS);
+          } else {
+            console.warn('Firebase Analytics not initialized or not supported.');
+          }
           scrollToSection('projects')
         }} className="glass-Button bg-yellow-500 dark:bg-yellow-700 px-8 py-3 rounded-full font-semibold hover:scale-130 transition-transform duration-500">
           View My Work

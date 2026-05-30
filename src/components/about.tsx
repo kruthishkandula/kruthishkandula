@@ -1,3 +1,5 @@
+'use client'
+
 import analyticsEvents from '@/lib/analytics.json';
 import { initFirebase } from '@/lib/firebaseClient';
 import { logEvent } from 'firebase/analytics';
