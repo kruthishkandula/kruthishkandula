@@ -1,6 +1,19 @@
 import SocialLinks from "./ui/SocialLinks"
+import analyticsEvents from '@/lib/analytics.json';
+import { useEffect } from 'react';
+import { logEvent } from 'firebase/analytics';
+import { initFirebase } from '@/lib/firebaseClient';
 
 const Contact = () => {
+  useEffect(() => {
+    initFirebase().then((analytics) => {
+      if (analytics) {
+        logEvent(analytics, analyticsEvents.VIEW_CONTACT);
+        console.log('Logged:', analyticsEvents.VIEW_CONTACT);
+      }
+    });
+  }, []);
+
   return (
     <section id="contact" className="min-h-3/4 ">
       <div className="container py-20 px-6 mx-auto">

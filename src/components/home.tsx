@@ -1,8 +1,12 @@
 'use client'
 
 import { portfolio_details } from "@/data/portfolio"
+import { initFirebase } from '@/lib/firebaseClient'
+import { useEffect } from 'react'
 import RoleCarousel from "./ui/RoleCarousel"
 import { Button } from "./ui/button"
+import { getAnalytics, logEvent } from "firebase/analytics";
+import analyticsEvents from '@/lib/analytics.json';
 
 const Home = () => {
 
@@ -15,6 +19,15 @@ const Home = () => {
       })
     }
   }
+
+  useEffect(() => {
+    initFirebase().then((analytics) => {
+      if (analytics) {
+        logEvent(analytics, analyticsEvents.VIEW_HOME);
+        console.log('Logged:', analyticsEvents.VIEW_HOME);
+      }
+    });
+  }, []);
 
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -29,6 +42,7 @@ const Home = () => {
         </p>
         <RoleCarousel />
         <Button variant={'default'} onClick={() => {
+          logEvent(getAnalytics(), analyticsEvents.VIEW_PROJECTS);
           scrollToSection('projects')
         }} className="glass-Button bg-yellow-500 dark:bg-yellow-700 px-8 py-3 rounded-full font-semibold hover:scale-130 transition-transform duration-500">
           View My Work

@@ -1,0 +1,9 @@
+{
+  "VIEW_HOME": "view_home",
+  "VIEW_ABOUT": "view_about",
+  "VIEW_PROJECTS": "view_projects",
+  "VIEW_CONTACT": "view_contact",
+  "CLICK_DOWNLOAD_RESUME": "click_download_resume",
+  "CLICK_SOCIAL_LINK": "click_social_link",
+  "CLICK_PROJECT": "click_project"
+}

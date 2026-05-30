@@ -2,15 +2,28 @@
 
 import { ProjectsData } from "@/data/portfolio"
 import { Button } from "./ui/button"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { X, ExternalLink, Calendar, Users, Award } from "lucide-react"
+import analyticsEvents from '@/lib/analytics.json';
+import { getAnalytics, logEvent } from 'firebase/analytics';
+import { initFirebase } from '@/lib/firebaseClient';
 
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState<any | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [lightbox, setLightbox] = useState<{ open: boolean, img: string | null }>({ open: false, img: null })
 
+  useEffect(() => {
+    initFirebase().then((analytics) => {
+      if (analytics) {
+        logEvent(analytics, analyticsEvents.VIEW_PROJECTS);
+        console.log('Logged:', analyticsEvents.VIEW_PROJECTS);
+      }
+    });
+  }, []);
+
   const openModal = (project: any) => {
+    logEvent(getAnalytics(), analyticsEvents.CLICK_PROJECT, { project: project.title });
     setSelectedProject(project)
     setIsModalOpen(true)
     document.body.style.overflow = 'hidden' // Prevent background scroll

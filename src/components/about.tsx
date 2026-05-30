@@ -1,6 +1,19 @@
-import SkillsMarquee from "./ui/SkillsMarque"
+import analyticsEvents from '@/lib/analytics.json';
+import { initFirebase } from '@/lib/firebaseClient';
+import { logEvent } from 'firebase/analytics';
+import { useEffect } from 'react';
+import SkillsMarquee from "./ui/SkillsMarque";
 
 const About = () => {
+  useEffect(() => {
+    initFirebase().then((analytics) => {
+      if (analytics) {
+        logEvent(analytics, analyticsEvents.VIEW_ABOUT);
+        console.log('Logged:', analyticsEvents.VIEW_ABOUT);
+      }
+    });
+  }, []);
+
   return (
     <section id="about" className="min-h-screen py-20 px-6">
       <div className="container mx-auto">

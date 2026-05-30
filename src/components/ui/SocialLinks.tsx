@@ -11,6 +11,8 @@ import {
     FaWhatsapp,
     FaTimes
 } from 'react-icons/fa'
+import analyticsEvents from '@/lib/analytics.json';
+import { getAnalytics, logEvent } from 'firebase/analytics';
 
 const SocialLinks = () => {
     const { theme } = useTheme()
@@ -70,8 +72,9 @@ const SocialLinks = () => {
     ]
 
     const handleResumeClick = (e: React.MouseEvent) => {
-        e.preventDefault()
-        setIsResumeOpen(true)
+        e.preventDefault();
+        logEvent(getAnalytics(), analyticsEvents.CLICK_DOWNLOAD_RESUME);
+        setIsResumeOpen(true);
     }
 
     const closeResumeModal = () => {
@@ -96,6 +99,7 @@ const SocialLinks = () => {
                                 target={link.name === 'Email' || link.name === 'Phone' ? '_self' : '_blank'}
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-3 p-3 rounded-lg glass-button hover:scale-105 transition-all duration-200 group"
+                                onClick={() => logEvent(getAnalytics(), analyticsEvents.CLICK_SOCIAL_LINK, { name: link.name, url: link.url })}
                             >
                                 <IconComponent
                                     className="text-4xl group-hover:scale-120 transition-transform duration-200"
