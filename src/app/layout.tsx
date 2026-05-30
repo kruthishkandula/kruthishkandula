@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Kruthish Portfolio | Full Stack Developer',
   description: 'Modern portfolio showcasing full stack development projects and expertise. Built with Next.js and shadcn/ui.',
-  keywords: ['portfolio', 'developer', 'full stack', 'Next.js', 'React'],
+  keywords: ['portfolio', 'developer', 'full stack', 'Next.js', 'React', 'kruthish kandula'],
   authors: [{ name: 'Kruthish' }],
   creator: 'Kruthish',
   publisher: 'Kruthish',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://kruthishkandula-portfolio.onrender.com/',
+    url: 'https://kruthishkandula.onrender.com/',
     title: 'Kruthish Portfolio | Full Stack Developer',
     description: 'Modern portfolio showcasing full stack development projects and expertise. Built with Next.js and shadcn/ui.',
     siteName: 'Kruthish Portfolio',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     images: ['https://metatags.io/images/meta-tags.png'],
   },
   alternates: {
-    canonical: 'https://kruthishkandula-portfolio.onrender.com/',
+    canonical: 'https://kruthishkandula.onrender.com/',
   },
 }
 
@@ -61,7 +61,7 @@ export default function RootLayout({
               '@context': 'https://schema.org',
               '@type': 'Person',
               name: 'Kruthish Kandula',
-              url: 'https://kruthishkandula-portfolio.onrender.com',
+              url: 'https://kruthishkandula.onrender.com',
               sameAs: [
                 'https://twitter.com/kruthish',
                 'https://linkedin.com/in/kruthish',

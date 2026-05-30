@@ -1,8 +1,10 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getAnalytics, isSupported } from 'firebase/analytics';
+import { getPerformance } from '@firebase/performance';
 import { firebaseConfig } from './firebaseConfig';
 
 let analytics: ReturnType<typeof getAnalytics> | null = null;
+let performance: ReturnType<typeof getPerformance> | null = null;
 
 export const initFirebase = async () => {
   // Skip analytics in development or localhost
@@ -15,9 +17,14 @@ export const initFirebase = async () => {
   try {
     if (!getApps().length) {
       const app = initializeApp(firebaseConfig);
-      if (typeof window !== 'undefined' && (await isSupported())) {
+      if (typeof globalThis !== 'undefined' && (await isSupported())) {
         analytics = getAnalytics(app);
+        performance = getPerformance(app);
       }
+    }
+    // If app is already initialized, get performance instance
+    if (!performance && typeof globalThis !== 'undefined' && getApps().length) {
+      performance = getPerformance();
     }
     return analytics;
   } catch (err) {
