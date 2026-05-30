@@ -21,18 +21,45 @@ const Home = () => {
   }
 
   useEffect(() => {
-    initFirebase().then((analytics) => {
-      if (analytics) {
-        logEvent(analytics, analyticsEvents.VIEW_HOME);
-        console.log('Logged:', analyticsEvents.VIEW_HOME);
-      } else {
-        alert('Firebase Analytics not initialized or not supported. Please check your production environment and config.');
-        console.warn('Firebase Analytics not initialized or not supported.');
+    let didAlert = false;
+    try {
+      initFirebase().then((analytics) => {
+        if (analytics) {
+          logEvent(analytics, analyticsEvents.VIEW_HOME);
+          console.log('Logged:', analyticsEvents.VIEW_HOME);
+        } else {
+          if (!didAlert) {
+            alert('Firebase Analytics not initialized or not supported. Please check your production environment and config.');
+            didAlert = true;
+          }
+          console.warn('Firebase Analytics not initialized or not supported.');
+        }
+      }).catch((err) => {
+        if (!didAlert) {
+          alert('Firebase Analytics error: ' + err);
+          didAlert = true;
+        }
+        console.error('Firebase Analytics error:', err);
+      });
+    } catch (err) {
+      if (!didAlert) {
+        alert('Firebase Analytics error: ' + err);
+        didAlert = true;
       }
-    }).catch((err) => {
-      alert('Firebase Analytics error: ' + err);
       console.error('Firebase Analytics error:', err);
-    });
+    }
+    // Global handler for unhandled promise rejections
+    const handleRejection = (event) => {
+      if (!didAlert) {
+        alert('Unhandled error: ' + event.reason);
+        didAlert = true;
+      }
+      console.error('Unhandled error:', event.reason);
+    };
+    window.addEventListener('unhandledrejection', handleRejection);
+    return () => {
+      window.removeEventListener('unhandledrejection', handleRejection);
+    };
   }, []);
 
   return (
