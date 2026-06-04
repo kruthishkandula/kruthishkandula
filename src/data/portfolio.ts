@@ -121,10 +121,16 @@ export const ProjectsData = [
                     "https://i.ibb.co/p6YXhtXw/rupeeflow-theme.png"
                 ],
         status: "Personal Project",
-        duration: "2024 (3 months)",
+        duration: "2026 (2 months)",
         role: "Solo Developer & Designer",
         team_size: "Solo Project",
-        links: [],
+        links: [
+            {
+                name: 'Android APK',
+                link: 'https://www.appsend.dev/i/13d9339c-eae6-4aaa-96d0-f3a22580c5a0',
+                type: 'Playstore signed APK'
+            }
+        ],
         tech: ["React Native", "TypeScript", "Zustand", "Firebase", "React Native SVG", "Reanimated", "Tailwind CSS", "Jest"],
         features: [
             "Add, edit, and categorize expenses",
