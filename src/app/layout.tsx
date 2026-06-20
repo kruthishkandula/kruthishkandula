@@ -63,12 +63,11 @@ export default function RootLayout({
               name: 'Kruthish Kandula',
               url: 'https://kruthishkandula.onrender.com',
               sameAs: [
-                'https://twitter.com/kruthish',
-                'https://linkedin.com/in/kruthish',
-                'https://github.com/kruthish'
+                'https://www.linkedin.com/in/kruthish-kandula/',
+                'https://github.com/kruthishkandula'
               ],
               jobTitle: 'Full Stack Developer',
-              image: 'https://metatags.io/images/meta-tags.png',
+              image: 'https://i.ibb.co/hFhySVS7/portfolio.png',
             })
           }}
         />
