@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: 'Kruthish Portfolio',
     images: [
       {
-        url: 'https://metatags.io/images/meta-tags.png',
+        url: 'https://i.ibb.co/hFhySVS7/portfolio.png',
         width: 1200,
         height: 630,
         alt: 'Kruthish Portfolio',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: 'Kruthish Portfolio | Full Stack Developer',
     description: 'Modern portfolio showcasing full stack development projects and expertise. Built with Next.js and shadcn/ui.',
     creator: '@kruthish',
-    images: ['https://metatags.io/images/meta-tags.png'],
+    images: ['https://i.ibb.co/hFhySVS7/portfolio.png'],
   },
   alternates: {
     canonical: 'https://kruthishkandula.onrender.com/',
@@ -47,7 +47,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
