@@ -1,156 +1,449 @@
-'use client'
+'use client';
 
-import { useTheme } from 'next-themes'
-import { useState, useEffect } from 'react'
-import {
-    FaDownload,
-    FaEnvelope,
-    FaGithub,
-    FaLinkedin,
-    FaPhone,
-    FaWhatsapp,
-    FaTimes
-} from 'react-icons/fa'
+import { initFirebase } from '@/lib/firebaseClient';
 import analyticsEvents from '@/lib/analytics.json';
+
 import { getAnalytics, logEvent } from 'firebase/analytics';
+import { motion } from 'framer-motion';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import {
+  FaDownload,
+  FaEnvelope,
+  FaGithub,
+  FaLinkedin,
+  FaPhone,
+  FaWhatsapp,
+} from 'react-icons/fa';
 
-const SocialLinks = () => {
-    const { theme } = useTheme()
-    const [isResumeOpen, setIsResumeOpen] = useState(false)
-    
-    // Prevent background scrolling when modal is open
-    useEffect(() => {
-        if (isResumeOpen) {
-            document.body.style.overflow = 'hidden'
-        } else {
-            document.body.style.overflow = 'unset'
-        }
-        
-        // Cleanup function to restore scrolling when component unmounts
-        return () => {
-            document.body.style.overflow = 'unset'
-        }
-    }, [isResumeOpen])
-    
-    const socialLinks = [
-        {
-            name: 'LinkedIn',
-            icon: FaLinkedin,
-            url: 'https://linkedin.com/in/kruthish-kandula',
-            color: '#0077B5',
-            label: 'kruthish-kandula'
-        },
-        {
-            name: 'GitHub',
-            icon: FaGithub,
-            url: 'https://github.com/kruthishkandula',
-            color: '#333',
-            label: 'kruthishkandula',
-            dark_color: '#FFFFFF'
-        },
-        {
-            name: 'Email',
-            icon: FaEnvelope,
-            url: 'mailto:kruthishkandula@gmail.com',
-            color: '#EA4335',
-            label: 'kruthishkandula@gmail.com',
-        },
-        {
-            name: 'Phone',
-            icon: FaPhone,
-            url: 'tel:+918247298981',
-            color: '#25D366',
-            label: '+91 8247298981'
-        },
-        {
-            name: 'Whatsapp',
-            icon: FaWhatsapp,
-            url: 'https://wa.me/918247298981',
-            color: '#25D366',
-            label: '+91 8247298981'
-        },
-    ]
+/* -------------------------------------------------------------------------- */
+/*                                   Types                                    */
+/* -------------------------------------------------------------------------- */
 
-    const handleResumeClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        logEvent(getAnalytics(), analyticsEvents.CLICK_DOWNLOAD_RESUME);
-        setIsResumeOpen(true);
-    }
-
-    const closeResumeModal = () => {
-        setIsResumeOpen(false)
-    }
-
-    const handleModalClick = (e: React.MouseEvent) => {
-        // Prevent closing when clicking inside the modal content
-        e.stopPropagation()
-    }
-
-    return (
-        <>
-            <div className="glass-card p-6">
-                <div className="space-y-3 flex flex-row">
-                    {socialLinks.map((link, index) => {
-                        const IconComponent = link.icon
-                        return (
-                            <a
-                                key={index}
-                                href={link.url}
-                                target={link.name === 'Email' || link.name === 'Phone' ? '_self' : '_blank'}
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-3 p-3 rounded-lg glass-button hover:scale-105 transition-all duration-200 group"
-                                onClick={() => logEvent(getAnalytics(), analyticsEvents.CLICK_SOCIAL_LINK, { name: link.name, url: link.url })}
-                            >
-                                <IconComponent
-                                    className="text-4xl group-hover:scale-120 transition-transform duration-200"
-                                    style={{ color: theme == 'dark' ? (link.dark_color || link.color) : link.color }}
-                                />
-                            </a>
-                        )
-                    })}
-                </div>
-
-                {/* Resume Download */}
-                <div className="mt-4 pt-4 border-t border-foreground/10">
-                    <button
-                        onClick={handleResumeClick}
-                        className="flex items-center justify-center gap-2 w-full p-3 glass-button hover:scale-105 transition-all duration-200 group"
-                    >
-                        <FaDownload className="text-primary group-hover:scale-140 transition-transform duration-200" />
-                        <span className="font-medium">View Resume</span>
-                    </button>
-                </div>
-            </div>
-
-            {/* Resume Modal Overlay */}
-            {isResumeOpen && (
-                <div 
-                    onClick={closeResumeModal}  
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-sm overflow-hidden"
-                >
-                    <div 
-                        onClick={handleModalClick}
-                        className="relative w-[95vw] h-[95vh] max-w-6xl bg-white dark:bg-gray-900 rounded-lg shadow-2xl"
-                    >
-                        {/* Close Button */}
-                        <button
-                            onClick={closeResumeModal}
-                            className="absolute top-2 right-2 z-10 p-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors duration-200"
-                        >
-                            <FaTimes className="text-xl" />
-                        </button>
-                        
-                        {/* Resume Content */}
-                        <iframe
-                            src="https://workdrive.zohopublic.in/file/s3q01bc8b8838419b44f9a3e19448719a54bd"
-                            className="w-full h-full rounded-lg"
-                            title="Resume"
-                        />
-                    </div>
-                </div>
-            )}
-        </>
-    )
+interface SocialLinksProps {
+  onResumeOpen: () => void;
+  onResumeClose: () => void;
 }
 
-export default SocialLinks
+interface SocialLink {
+  name: string;
+  icon: React.ComponentType<{
+    className?: string;
+    style?: React.CSSProperties;
+  }>;
+  url: string;
+  color: string;
+  darkColor?: string;
+  label: string;
+  openInNewTab: boolean;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              Social Links Data                             */
+/* -------------------------------------------------------------------------- */
+
+const socialLinks: SocialLink[] = [
+  {
+    name: 'LinkedIn',
+    icon: FaLinkedin,
+    url: 'https://linkedin.com/in/kruthish-kandula',
+    color: '#0077B5',
+    label: 'LinkedIn',
+    openInNewTab: true,
+  },
+  {
+    name: 'GitHub',
+    icon: FaGithub,
+    url: 'https://github.com/kruthishkandula',
+    color: '#181717',
+    darkColor: '#FFFFFF',
+    label: 'GitHub',
+    openInNewTab: true,
+  },
+  {
+    name: 'Email',
+    icon: FaEnvelope,
+    url: 'mailto:kruthishkandula@gmail.com',
+    color: '#EA4335',
+    label: 'Email',
+    openInNewTab: false,
+  },
+  {
+    name: 'Phone',
+    icon: FaPhone,
+    url: 'tel:+918247298981',
+    color: '#22C55E',
+    label: 'Phone',
+    openInNewTab: false,
+  },
+  {
+    name: 'WhatsApp',
+    icon: FaWhatsapp,
+    url: 'https://wa.me/918247298981',
+    color: '#25D366',
+    label: 'WhatsApp',
+    openInNewTab: true,
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*                              Motion Variants                               */
+/* -------------------------------------------------------------------------- */
+
+const containerVariants = {
+  hidden: {},
+
+  visible: {
+    transition: {
+      staggerChildren: 0.07,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 10,
+    scale: 0.95,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+
+    transition: {
+      duration: 0.4,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+};
+
+/* -------------------------------------------------------------------------- */
+/*                              Social Links                                  */
+/* -------------------------------------------------------------------------- */
+
+const SocialLinks = ({
+  onResumeOpen,
+  onResumeClose: _onResumeClose,
+}: SocialLinksProps) => {
+  const { resolvedTheme } = useTheme();
+
+  const [analytics, setAnalytics] =
+    useState<ReturnType<typeof getAnalytics> | null>(null);
+
+  /* ------------------------------------------------------------------------ */
+  /*                              Analytics                                   */
+  /* ------------------------------------------------------------------------ */
+
+  useEffect(() => {
+    const initializeAnalytics = async () => {
+      try {
+        const analyticsInstance = await initFirebase();
+
+        if (analyticsInstance) {
+          setAnalytics(analyticsInstance);
+        }
+      } catch (error) {
+        console.error(
+          'Firebase initialization error:',
+          error
+        );
+      }
+    };
+
+    initializeAnalytics();
+  }, []);
+
+  /* ------------------------------------------------------------------------ */
+  /*                              Icon Color                                  */
+  /* ------------------------------------------------------------------------ */
+
+  const getIconColor = (link: SocialLink): string => {
+    if (resolvedTheme === 'dark' && link.darkColor) {
+      return link.darkColor;
+    }
+
+    return link.color;
+  };
+
+  /* ------------------------------------------------------------------------ */
+  /*                             Social Click                                 */
+  /* ------------------------------------------------------------------------ */
+
+  const handleSocialClick = (link: SocialLink) => {
+    if (!analytics) {
+      return;
+    }
+
+    logEvent(
+      analytics,
+      analyticsEvents.CLICK_SOCIAL_LINK,
+      {
+        name: link.name,
+        url: link.url,
+      }
+    );
+  };
+
+  /* ------------------------------------------------------------------------ */
+  /*                             Resume Click                                 */
+  /* ------------------------------------------------------------------------ */
+
+  const handleResumeClick = () => {
+    if (analytics) {
+      logEvent(
+        analytics,
+        analyticsEvents.CLICK_DOWNLOAD_RESUME
+      );
+    }
+
+    onResumeOpen();
+  };
+
+  /* ------------------------------------------------------------------------ */
+  /*                                  Render                                  */
+  /* ------------------------------------------------------------------------ */
+
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{
+        once: true,
+        amount: 0.3,
+      }}
+      variants={containerVariants}
+      className="
+        w-full
+        max-w-xl
+        rounded-2xl
+        border
+        border-white/[0.08]
+        bg-white/[0.035]
+        p-4
+        backdrop-blur-md
+        sm:p-5
+      "
+    >
+      {/* ================================================================ */}
+      {/*                         SOCIAL ICONS                             */}
+      {/* ================================================================ */}
+
+      <div
+        className="
+          flex
+          flex-wrap
+          items-center
+          justify-center
+          gap-3
+        "
+      >
+        {socialLinks.map((link) => {
+          const IconComponent = link.icon;
+          const iconColor = getIconColor(link);
+
+          return (
+            <motion.a
+              key={link.name}
+              variants={itemVariants}
+              href={link.url}
+              target={
+                link.openInNewTab
+                  ? '_blank'
+                  : '_self'
+              }
+              rel={
+                link.openInNewTab
+                  ? 'noopener noreferrer'
+                  : undefined
+              }
+              aria-label={link.label}
+              title={link.label}
+              onClick={() => handleSocialClick(link)}
+              whileHover={{
+                y: -4,
+                scale: 1.06,
+              }}
+              whileTap={{
+                scale: 0.94,
+              }}
+              transition={{
+                duration: 0.2,
+                ease: 'easeOut',
+              }}
+              className="
+                group
+                relative
+                flex
+                h-12
+                w-12
+                items-center
+                justify-center
+                rounded-xl
+                border
+                border-white/[0.08]
+                bg-white/[0.045]
+                backdrop-blur-md
+                transition-colors
+                duration-300
+                hover:border-violet-400/25
+                hover:bg-white/[0.09]
+                focus-visible:outline-none
+                focus-visible:ring-2
+                focus-visible:ring-violet-400/60
+                sm:h-14
+                sm:w-14
+              "
+            >
+              {/* Hover glow */}
+              <span
+                className="
+                  pointer-events-none
+                  absolute
+                  inset-1
+                  rounded-lg
+                  bg-violet-400/0
+                  blur-lg
+                  transition-colors
+                  duration-300
+                  group-hover:bg-violet-400/[0.08]
+                "
+              />
+
+              <IconComponent
+                className="
+                  relative
+                  z-10
+                  text-xl
+                  transition-transform
+                  duration-300
+                  group-hover:scale-110
+                  sm:text-2xl
+                "
+                style={{
+                  color: iconColor,
+                }}
+              />
+
+              {/* Bottom accent */}
+              <span
+                className="
+                  absolute
+                  bottom-1
+                  left-1/2
+                  h-px
+                  w-0
+                  -translate-x-1/2
+                  rounded-full
+                  bg-violet-300
+                  transition-all
+                  duration-300
+                  group-hover:w-5
+                "
+              />
+            </motion.a>
+          );
+        })}
+      </div>
+
+      {/* ================================================================ */}
+      {/*                           DIVIDER                                */}
+      {/* ================================================================ */}
+
+      <motion.div
+        variants={itemVariants}
+        className="
+          my-5
+          h-px
+          w-full
+          bg-gradient-to-r
+          from-transparent
+          via-white/[0.12]
+          to-transparent
+        "
+      />
+
+      {/* ================================================================ */}
+      {/*                       VIEW RESUME BUTTON                         */}
+      {/* ================================================================ */}
+
+      <motion.button
+        variants={itemVariants}
+        type="button"
+        onClick={handleResumeClick}
+        whileHover={{
+          y: -2,
+        }}
+        whileTap={{
+          scale: 0.98,
+        }}
+        className="
+          group
+          relative
+          flex
+          h-12
+          w-full
+          items-center
+          justify-center
+          gap-2.5
+          overflow-hidden
+          rounded-xl
+          border
+          border-violet-400/[0.16]
+          bg-violet-400/[0.07]
+          px-5
+          text-sm
+          font-semibold
+          text-white/85
+          backdrop-blur-md
+          transition-all
+          duration-300
+          hover:border-violet-400/30
+          hover:bg-violet-400/[0.12]
+          hover:text-white
+          focus-visible:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-violet-400/60
+        "
+      >
+        {/* Subtle button glow */}
+        <span
+          className="
+            pointer-events-none
+            absolute
+            left-1/2
+            top-1/2
+            h-16
+            w-32
+            -translate-x-1/2
+            -translate-y-1/2
+            rounded-full
+            bg-violet-400/[0.06]
+            blur-2xl
+            transition-all
+            duration-300
+            group-hover:bg-violet-400/[0.12]
+          "
+        />
+
+        <FaDownload
+          className="
+            relative
+            z-10
+            text-violet-300
+            transition-transform
+            duration-300
+            group-hover:-translate-y-0.5
+          "
+        />
+
+        <span className="relative z-10">
+          View Resume
+        </span>
+      </motion.button>
+    </motion.div>
+  );
+};
+
+export default SocialLinks;

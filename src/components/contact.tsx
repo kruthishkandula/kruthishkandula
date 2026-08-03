@@ -1,36 +1,406 @@
-'use client'
+'use client';
 
-import SocialLinks from "./ui/SocialLinks"
+import SocialLinks from './ui/SocialLinks';
 import analyticsEvents from '@/lib/analytics.json';
-import { useEffect } from 'react';
-import { logEvent } from 'firebase/analytics';
 import { initFirebase } from '@/lib/firebaseClient';
 
-const Contact = () => {
+import { logEvent } from 'firebase/analytics';
+import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import { MessageCircle } from 'lucide-react';
+
+/* -------------------------------------------------------------------------- */
+/*                                   Types                                    */
+/* -------------------------------------------------------------------------- */
+
+interface ContactProps {
+  onResumeOpen: () => void;
+  onResumeClose: () => void;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              Motion Variants                               */
+/* -------------------------------------------------------------------------- */
+
+const containerVariants = {
+  hidden: {},
+
+  visible: {
+    transition: {
+      staggerChildren: 0.14,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+    filter: 'blur(5px)',
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+
+    transition: {
+      duration: 0.65,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+};
+
+/* -------------------------------------------------------------------------- */
+/*                                  Contact                                   */
+/* -------------------------------------------------------------------------- */
+
+const Contact = ({
+  onResumeOpen,
+  onResumeClose,
+}: ContactProps) => {
+  /* ------------------------------------------------------------------------ */
+  /*                              Analytics                                   */
+  /* ------------------------------------------------------------------------ */
+
   useEffect(() => {
     initFirebase().then((analytics) => {
-      if (analytics) {
-        logEvent(analytics, analyticsEvents.VIEW_CONTACT);
-        console.log('Logged:', analyticsEvents.VIEW_CONTACT);
+      if (!analytics) {
+        return;
       }
+
+      logEvent(
+        analytics,
+        analyticsEvents.VIEW_CONTACT
+      );
     });
   }, []);
 
+  /* ------------------------------------------------------------------------ */
+  /*                                  Render                                  */
+  /* ------------------------------------------------------------------------ */
+
   return (
-    <section id="contact" className="min-h-3/4 ">
-      <div className="container py-20 px-6 mx-auto">
-        <div className="glass-card flex flex-col justify-between items-center p-8 md:p-12 max-w-2xl mx-auto text-center">
-          <div className="flex flex-col" >
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-primary">Get In Touch</h2>
-            <p className="text-lg mb-8 text-muted-foreground">
-              I'm always open to discussing new opportunities and interesting projects.
-            </p>
+    <section
+      id="contact"
+      className="
+        min-h-[75vh]
+        px-6
+        py-20
+      "
+    >
+      <div className="container mx-auto">
+
+        {/* ================================================================ */}
+        {/*                       MAIN GLASS CONTAINER                        */}
+        {/* ================================================================ */}
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.2,
+          }}
+          variants={containerVariants}
+          className="
+            relative
+            mx-auto
+            max-w-7xl
+            overflow-hidden
+            rounded-[32px]
+            border
+            border-white/10
+            bg-black/[0.16]
+            p-6
+            shadow-[0_24px_80px_rgba(0,0,0,0.18)]
+            backdrop-blur-xl
+            md:p-10
+            lg:p-12
+          "
+        >
+          {/* ============================================================ */}
+          {/*                    BACKGROUND EFFECTS                        */}
+          {/* ============================================================ */}
+
+          <div
+            className="
+              pointer-events-none
+              absolute
+              left-1/2
+              top-1/2
+              h-[350px]
+              w-[65%]
+              -translate-x-1/2
+              -translate-y-1/2
+              rounded-full
+              bg-violet-500/[0.055]
+              blur-[100px]
+            "
+          />
+
+          <div
+            className="
+              pointer-events-none
+              absolute
+              bottom-[-120px]
+              right-[10%]
+              h-[250px]
+              w-[250px]
+              rounded-full
+              bg-cyan-400/[0.035]
+              blur-[90px]
+            "
+          />
+
+          {/* ============================================================ */}
+          {/*                         CONTENT                              */}
+          {/* ============================================================ */}
+
+          <div
+            className="
+              relative
+              z-10
+              mx-auto
+              flex
+              max-w-3xl
+              flex-col
+              items-center
+              text-center
+            "
+          >
+            {/* ---------------------------------------------------------- */}
+            {/*                       EYEBROW                              */}
+            {/* ---------------------------------------------------------- */}
+
+            <motion.div
+              variants={itemVariants}
+              className="
+                mb-5
+                flex
+                items-center
+                gap-2
+              "
+            >
+              <span
+                className="
+                  h-1.5
+                  w-6
+                  rounded-full
+                  bg-violet-400
+                  shadow-[0_0_10px_rgba(167,139,250,0.7)]
+                "
+              />
+
+              <span
+                className="
+                  text-xs
+                  font-semibold
+                  uppercase
+                  tracking-[0.18em]
+                  text-violet-300
+                "
+              >
+                Let&apos;s Connect
+              </span>
+
+              <span
+                className="
+                  h-1.5
+                  w-6
+                  rounded-full
+                  bg-violet-400
+                  shadow-[0_0_10px_rgba(167,139,250,0.7)]
+                "
+              />
+            </motion.div>
+
+            {/* ---------------------------------------------------------- */}
+            {/*                        ICON                                */}
+            {/* ---------------------------------------------------------- */}
+
+            <motion.div
+              variants={itemVariants}
+              className="
+                mb-5
+                flex
+                h-12
+                w-12
+                items-center
+                justify-center
+                rounded-2xl
+                border
+                border-violet-400/[0.15]
+                bg-violet-400/[0.07]
+                text-violet-300
+                shadow-[0_0_30px_rgba(167,139,250,0.08)]
+              "
+            >
+              <MessageCircle size={21} />
+            </motion.div>
+
+            {/* ---------------------------------------------------------- */}
+            {/*                       HEADING                              */}
+            {/* ---------------------------------------------------------- */}
+
+            <motion.h2
+              variants={itemVariants}
+              className="
+                text-3xl
+                font-bold
+                tracking-tight
+                text-white
+                md:text-4xl
+                lg:text-5xl
+              "
+            >
+              <span>Have something </span>
+
+              <span className="text-violet-300">
+                interesting
+              </span>
+
+              <span> in mind?</span>
+            </motion.h2>
+
+            {/* ---------------------------------------------------------- */}
+            {/*                     DESCRIPTION                            */}
+            {/* ---------------------------------------------------------- */}
+
+            <motion.p
+              variants={itemVariants}
+              className="
+                mt-5
+                max-w-2xl
+                text-sm
+                leading-7
+                text-white/65
+                md:text-base
+                md:leading-8
+              "
+            >
+              <span>
+                I&apos;m always open to discussing
+              </span>
+
+              <span className="font-medium text-white/90">
+                {' new opportunities'}
+              </span>
+
+              <span>, </span>
+
+              <span className="font-medium text-cyan-200">
+                interesting projects
+              </span>
+
+              <span>
+                , and engineering challenges where I can contribute and
+                create meaningful impact.
+              </span>
+            </motion.p>
+
+            {/* ---------------------------------------------------------- */}
+            {/*                       DIVIDER                              */}
+            {/* ---------------------------------------------------------- */}
+
+            <motion.div
+              variants={itemVariants}
+              className="
+                my-8
+                h-px
+                w-full
+                max-w-md
+                bg-gradient-to-r
+                from-transparent
+                via-white/15
+                to-transparent
+              "
+            />
+
+            {/* ---------------------------------------------------------- */}
+            {/*                      SOCIAL LINKS                          */}
+            {/* ---------------------------------------------------------- */}
+
+            <motion.div
+              variants={itemVariants}
+              className="
+                flex
+                w-full
+                justify-center
+              "
+            >
+              <SocialLinks
+                onResumeOpen={onResumeOpen}
+                onResumeClose={onResumeClose}
+              />
+            </motion.div>
+
+            {/* ---------------------------------------------------------- */}
+            {/*                      AVAILABILITY                          */}
+            {/* ---------------------------------------------------------- */}
+
+            <motion.div
+              variants={itemVariants}
+              className="
+                mt-8
+                flex
+                items-center
+                gap-2
+                rounded-full
+                border
+                border-white/[0.08]
+                bg-white/[0.04]
+                px-4
+                py-2
+                backdrop-blur-md
+              "
+            >
+              <span
+                className="
+                  h-2
+                  w-2
+                  rounded-full
+                  bg-green-600
+                  shadow-[0_0_9px_rgba(52,211,153,0.75)]
+                "
+              />
+
+              <span
+                className="
+                  text-xs
+                  font-medium
+                  text-white/60
+                "
+              >
+                Open to new opportunities
+              </span>
+            </motion.div>
           </div>
-          <SocialLinks />
-        </div>
+
+          {/* ============================================================ */}
+          {/*                       BOTTOM ACCENT                          */}
+          {/* ============================================================ */}
+
+          <div
+            className="
+              pointer-events-none
+              absolute
+              bottom-0
+              left-1/2
+              h-px
+              w-1/3
+              -translate-x-1/2
+              bg-gradient-to-r
+              from-transparent
+              via-violet-400/60
+              to-transparent
+            "
+          />
+        </motion.div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;

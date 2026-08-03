@@ -1,226 +1,745 @@
-"use client"
+"use client";
 
-import { ProjectsData } from "@/data/portfolio"
-import { Button } from "./ui/button"
-import { useEffect, useState } from "react"
-import { X, ExternalLink, Calendar, Users, Award } from "lucide-react"
-import analyticsEvents from '@/lib/analytics.json';
-import { getAnalytics, logEvent } from 'firebase/analytics';
-import { initFirebase } from '@/lib/firebaseClient';
+import { ProjectsData } from "@/data/portfolio";
+import { useEffect, useState } from "react";
+import {
+  ArrowUpRight,
+  Calendar,
+  Layers3,
+  Users,
+} from "lucide-react";
+import { motion } from "framer-motion";
 
-const Projects = () => {
-  const [selectedProject, setSelectedProject] = useState<any | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [lightbox, setLightbox] = useState<{ open: boolean, img: string | null }>({ open: false, img: null })
+import analyticsEvents from "@/lib/analytics.json";
+import { getAnalytics, logEvent } from "firebase/analytics";
+import { initFirebase } from "@/lib/firebaseClient";
+
+/* -------------------------------------------------------------------------- */
+/*                                   Types                                    */
+/* -------------------------------------------------------------------------- */
+
+interface ProjectsProps {
+  isActive: boolean;
+  onProjectSelect: (project: any) => void;
+  onModalOpen: () => void;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              Motion Variants                               */
+/* -------------------------------------------------------------------------- */
+
+const containerVariants = {
+  hidden: {},
+
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const headingVariants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+    filter: "blur(4px)",
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+    scale: 0.97,
+    filter: "blur(6px)",
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: "blur(0px)",
+
+    transition: {
+      duration: 0.65,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+};
+
+/* -------------------------------------------------------------------------- */
+/*                              Status Helpers                                */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * SonarQube S3358:
+ * Keep status styling outside JSX instead of using
+ * nested ternary expressions.
+ */
+const getStatusDotClass = (status: string): string => {
+  if (status === "Live Production") {
+    return `
+      bg-emerald-400
+      shadow-[0_0_8px_rgba(52,211,153,0.8)]
+    `;
+  }
+
+  if (status === "In Development") {
+    return `
+      bg-amber-300
+      shadow-[0_0_8px_rgba(252,211,77,0.7)]
+    `;
+  }
+
+  return `
+    bg-cyan-300
+    shadow-[0_0_8px_rgba(103,232,249,0.7)]
+  `;
+};
+
+/* -------------------------------------------------------------------------- */
+/*                               Status Badge                                 */
+/* -------------------------------------------------------------------------- */
+
+const ProjectStatus = ({
+  status,
+}: {
+  status: string;
+}) => {
+  const statusDotClass = getStatusDotClass(status);
+
+  return (
+    <div
+      className="
+        absolute
+        right-4
+        top-4
+        z-20
+        flex
+        items-center
+        gap-2
+        rounded-full
+        border
+        border-white/10
+        bg-black/50
+        px-3
+        py-1.5
+        backdrop-blur-xl
+      "
+    >
+      <span
+        className={`
+          h-1.5
+          w-1.5
+          rounded-full
+          ${statusDotClass}
+        `}
+      />
+
+      <span className="text-[11px] font-semibold text-white/85">
+        {status}
+      </span>
+    </div>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/*                                  Projects                                  */
+/* -------------------------------------------------------------------------- */
+
+const Projects = ({
+  isActive: _isActive,
+  onProjectSelect,
+  onModalOpen,
+}: ProjectsProps) => {
+  const [analytics, setAnalytics] =
+    useState<ReturnType<typeof getAnalytics> | null>(null);
+
+  /* ------------------------------------------------------------------------ */
+  /*                              Analytics                                   */
+  /* ------------------------------------------------------------------------ */
 
   useEffect(() => {
-    initFirebase().then((analytics) => {
-      if (analytics) {
-        logEvent(analytics, analyticsEvents.VIEW_PROJECTS);
-        console.log('Logged:', analyticsEvents.VIEW_PROJECTS);
+    initFirebase().then((analyticsInstance) => {
+      if (!analyticsInstance) {
+        return;
       }
+
+      setAnalytics(analyticsInstance);
+
+      logEvent(
+        analyticsInstance,
+        analyticsEvents.VIEW_PROJECTS
+      );
     });
   }, []);
 
-  const openModal = (project: any) => {
-    logEvent(getAnalytics(), analyticsEvents.CLICK_PROJECT, { project: project.title });
-    setSelectedProject(project)
-    setIsModalOpen(true)
-    document.body.style.overflow = 'hidden' // Prevent background scroll
-  }
+  /* ------------------------------------------------------------------------ */
+  /*                           Project Selection                              */
+  /* ------------------------------------------------------------------------ */
 
-  const closeModal = () => {
-    setIsModalOpen(false)
-    setSelectedProject(null)
-    document.body.style.overflow = 'unset' // Restore scroll
-  }
+  const handleProjectClick = (project: any) => {
+    if (analytics) {
+      logEvent(
+        analytics,
+        analyticsEvents.CLICK_PROJECT,
+        {
+          project: project.title,
+        }
+      );
+    }
+
+    onProjectSelect(project);
+    onModalOpen();
+  };
+
+  /* ------------------------------------------------------------------------ */
+  /*                                  Render                                  */
+  /* ------------------------------------------------------------------------ */
 
   return (
-    <section id="projects" className="min-h-screen py-20 pt-30 px-6">
+    <section
+      id="projects"
+      className="
+        min-h-screen
+        px-6
+        py-20
+      "
+    >
       <div className="container mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">My Projects</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {ProjectsData.map((project, index) => (
-            <div
-              key={index}
-              className="rounded-3xl shadow-xl bg-white/80 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col group overflow-hidden"
-              onClick={() => openModal(project)}
-            >
-              <div className="relative w-full aspect-[16/9] overflow-hidden">
-                <img
-                  src={project.imageUrl}
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <span className={`absolute top-4 right-4 px-3 py-1 text-xs rounded-full font-semibold shadow-md ${project.status === 'Live Production' ? 'bg-green-500/90 text-white' : project.status === 'In Development' ? 'bg-yellow-500/90 text-white' : 'bg-blue-500/90 text-white'}`}>{project.status}</span>
-              </div>
-              <div className="flex-1 flex flex-col p-6 gap-3">
-                <h3 className="text-2xl font-bold mb-1 group-hover:text-primary transition-colors">{project.title}</h3>
-                <p className="text-muted-foreground mb-2 line-clamp-2">{project.short_description}</p>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {project.tech.slice(0, 4).map((tech, techIndex) => (
-                    <span key={techIndex} className="bg-pink-600/10 text-pink-700 dark:text-pink-300 px-3 py-1 text-xs rounded-full font-medium">
-                      {tech}
-                    </span>
-                  ))}
-                  {project.tech.length > 4 && (
-                    <span className="bg-zinc-200 dark:bg-zinc-700 px-3 py-1 text-xs rounded-full font-medium">
-                      +{project.tech.length - 4} more
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-                  <Calendar size={14} />
-                  <span>{project.duration}</span>
-                  <span className="mx-2">•</span>
-                  <Users size={14} />
-                  <span>{project.team_size}</span>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-auto">
-                  <span className="bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded text-xs">{project.category}</span>
-                  <span className="bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded text-xs">{project.type}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
-      {/* Modal Overlay */}
-      {isModalOpen && selectedProject && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xl"
-          onClick={closeModal}
+        {/* ================================================================ */}
+        {/*                        MAIN GLASS CONTAINER                       */}
+        {/* ================================================================ */}
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.08,
+          }}
+          variants={containerVariants}
+          className="
+            mx-auto
+            max-w-7xl
+            rounded-[32px]
+            border
+            border-white/10
+            bg-black/[0.16]
+            p-6
+            shadow-[0_24px_80px_rgba(0,0,0,0.18)]
+            backdrop-blur-xl
+            md:p-10
+            lg:p-12
+          "
         >
-          <button
-            onClick={closeModal}
-            className="absolute top-4 right-8 z-20 p-2 rounded-full bg-black/40 hover:bg-black/70 transition-colors"
-            aria-label="Close"
+
+          {/* ============================================================ */}
+          {/*                            HEADER                            */}
+          {/* ============================================================ */}
+
+          <motion.div
+            variants={headingVariants}
+            className="
+              mb-10
+              flex
+              flex-col
+              gap-4
+              md:mb-12
+              md:flex-row
+              md:items-end
+              md:justify-between
+            "
           >
-            <X size={36} />
-          </button>
+            <div>
+
+              {/* Eyebrow */}
+              <div className="mb-3 flex items-center gap-2">
+                <span
+                  className="
+                    h-1.5
+                    w-6
+                    rounded-full
+                    bg-violet-400
+                    shadow-[0_0_10px_rgba(167,139,250,0.7)]
+                  "
+                />
+
+                <span
+                  className="
+                    text-xs
+                    font-semibold
+                    uppercase
+                    tracking-[0.18em]
+                    text-violet-300
+                  "
+                >
+                  Selected Work
+                </span>
+              </div>
+
+              {/* Main Heading */}
+              <h2
+                className="
+                  text-3xl
+                  font-bold
+                  tracking-tight
+                  text-white
+                  md:text-4xl
+                "
+              >
+                <span>Projects I&apos;ve</span>
+
+                <span className="text-violet-300">
+                  {" Built"}
+                </span>
+              </h2>
+
+              {/* Description */}
+              <p
+                className="
+                  mt-3
+                  max-w-2xl
+                  text-sm
+                  leading-6
+                  text-white/60
+                  md:text-base
+                "
+              >
+                <span>
+                  A selection of production applications and engineering
+                  projects across
+                </span>
+
+                <span className="font-medium text-white/85">
+                  {" mobile, web, fintech"}
+                </span>
+
+                <span>
+                  {" and "}
+                </span>
+
+                <span className="font-medium text-cyan-200">
+                  modern frontend architecture
+                </span>
+
+                <span>.</span>
+              </p>
+            </div>
+
+            {/* Project Count */}
+            <div
+              className="
+                hidden
+                items-center
+                gap-2
+                rounded-full
+                border
+                border-white/10
+                bg-white/[0.045]
+                px-4
+                py-2
+                text-sm
+                text-white/60
+                md:flex
+              "
+            >
+              <Layers3
+                size={15}
+                className="text-violet-300"
+              />
+
+              <span className="flex items-center gap-1">
+                <span className="font-semibold text-white">
+                  {ProjectsData.length}
+                </span>
+
+                <span>Projects</span>
+              </span>
+            </div>
+          </motion.div>
+
+          {/* ============================================================ */}
+          {/*                        PROJECT GRID                          */}
+          {/* ============================================================ */}
+
           <div
-            className="bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl max-w-5xl w-full relative flex flex-col md:flex-row"
-            style={{ maxHeight: '92vh' }}
-            onClick={e => e.stopPropagation()}
+            className="
+              grid
+              gap-6
+              md:grid-cols-2
+              xl:grid-cols-4
+            "
           >
-            {/* Left: Images */}
-            <div className="md:w-2/5 w-full p-6 flex flex-col gap-4 border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800">
-              <div className="w-full">
-                {selectedProject.images && selectedProject.images.length > 1 ? (
-                  <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-2 scrollbar-thin scrollbar-thumb-rounded-lg scrollbar-thumb-gray-300">
-                    {selectedProject.images.map((img: string, idx: number) => (
-                      <div key={idx} className="relative flex-shrink-0 snap-center group" style={{ width: '180px', aspectRatio: '9/16' }}>
-                        <img
-                          src={img}
-                          alt={`${selectedProject.title} ${idx + 1}`}
-                          className="w-full h-auto max-h-72 object-contain rounded-2xl shadow-lg border-2 border-transparent group-hover:border-primary transition-all duration-300 cursor-pointer bg-neutral-100"
-                          onClick={() => setLightbox({ open: true, img })}
-                        />
-                      </div>
-                    ))}
+            {ProjectsData.map((project, index) => (
+              <motion.article
+                key={`${project.title}-${index}`}
+                variants={cardVariants}
+                onClick={() => handleProjectClick(project)}
+                whileHover={{
+                  y: -6,
+                }}
+                transition={{
+                  duration: 0.25,
+                  ease: "easeOut",
+                }}
+                className="
+                  group
+                  relative
+                  flex
+                  cursor-pointer
+                  flex-col
+                  overflow-hidden
+                  rounded-2xl
+                  border
+                  border-white/[0.08]
+                  bg-white/[0.04]
+                  shadow-[0_10px_35px_rgba(0,0,0,0.08)]
+                  backdrop-blur-md
+                  transition-colors
+                  duration-300
+                  hover:border-violet-400/25
+                  hover:bg-white/[0.065]
+                  hover:shadow-[0_18px_50px_rgba(0,0,0,0.18)]
+                "
+              >
+
+                {/* ====================================================== */}
+                {/*                         IMAGE                          */}
+                {/* ====================================================== */}
+
+                <div
+                  className="
+                    relative
+                    aspect-[16/9]
+                    w-full
+                    overflow-hidden
+                    bg-black/20
+                  "
+                >
+                  <img
+                    src={project.imageUrl}
+                    alt={project.title}
+                    loading="lazy"
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                      transition-transform
+                      duration-700
+                      ease-out
+                      group-hover:scale-[1.06]
+                    "
+                  />
+
+                  {/* Image Gradient */}
+                  <div
+                    className="
+                      pointer-events-none
+                      absolute
+                      inset-0
+                      bg-gradient-to-t
+                      from-black/55
+                      via-black/5
+                      to-transparent
+                    "
+                  />
+
+                  {/* Violet Hover Tint */}
+                  <div
+                    className="
+                      pointer-events-none
+                      absolute
+                      inset-0
+                      bg-violet-500/0
+                      transition-colors
+                      duration-500
+                      group-hover:bg-violet-500/[0.06]
+                    "
+                  />
+
+                  {/* Status */}
+                  <ProjectStatus status={project.status} />
+
+                  {/* Hover Action */}
+                  <div
+                    className="
+                      absolute
+                      bottom-4
+                      right-4
+                      flex
+                      h-9
+                      w-9
+                      translate-y-2
+                      items-center
+                      justify-center
+                      rounded-full
+                      border
+                      border-white/10
+                      bg-black/50
+                      text-white
+                      opacity-0
+                      backdrop-blur-xl
+                      transition-all
+                      duration-300
+                      group-hover:translate-y-0
+                      group-hover:opacity-100
+                    "
+                  >
+                    <ArrowUpRight size={17} />
                   </div>
-                ) : (
-                  <div className="flex justify-center">
-                    <img
-                      src={selectedProject.imageUrl || (selectedProject.images && selectedProject.images[0])}
-                      alt={selectedProject.title}
-                      className="w-auto h-auto max-h-72 object-contain rounded-2xl shadow-lg border-2 border-transparent hover:border-primary transition-all duration-300 cursor-pointer bg-neutral-100"
-                      onClick={() => setLightbox({ open: true, img: selectedProject.imageUrl || (selectedProject.images && selectedProject.images[0]) })}
+                </div>
+
+                {/* ====================================================== */}
+                {/*                         CONTENT                        */}
+                {/* ====================================================== */}
+
+                <div
+                  className="
+                    flex
+                    flex-1
+                    flex-col
+                    p-5
+                    md:p-6
+                  "
+                >
+
+                  {/* Project Title */}
+                  <h3
+                    className="
+                      mb-3
+                      text-lg
+                      font-bold
+                      tracking-tight
+                      text-white
+                      transition-colors
+                      duration-300
+                      group-hover:text-violet-300
+                      md:text-xl
+                    "
+                  >
+                    {project.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p
+                    className="
+                      mb-5
+                      line-clamp-2
+                      min-h-[48px]
+                      text-sm
+                      leading-6
+                      text-white/60
+                    "
+                  >
+                    {project.short_description}
+                  </p>
+
+                  {/* ==================================================== */}
+                  {/*                         TECH                         */}
+                  {/* ==================================================== */}
+
+                  <div className="mb-5 flex flex-wrap gap-2">
+                    {project.tech
+                      .slice(0, 4)
+                      .map((tech, techIndex) => (
+                        <span
+                          key={`${tech}-${techIndex}`}
+                          className="
+                            rounded-full
+                            border
+                            border-violet-400/[0.12]
+                            bg-violet-400/[0.07]
+                            px-2.5
+                            py-1
+                            text-[11px]
+                            font-medium
+                            text-violet-200
+                          "
+                        >
+                          {tech}
+                        </span>
+                      ))}
+
+                    {project.tech.length > 4 && (
+                      <span
+                        className="
+                          rounded-full
+                          border
+                          border-white/[0.08]
+                          bg-white/[0.05]
+                          px-2.5
+                          py-1
+                          text-[11px]
+                          font-medium
+                          text-white/60
+                        "
+                      >
+                        +{project.tech.length - 4}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* ==================================================== */}
+                  {/*                         META                         */}
+                  {/* ==================================================== */}
+
+                  <div
+                    className="
+                      mb-5
+                      flex
+                      flex-wrap
+                      items-center
+                      gap-x-3
+                      gap-y-2
+                      text-xs
+                      text-white/50
+                    "
+                  >
+                    {/* Duration */}
+                    <div className="flex items-center gap-1.5">
+                      <Calendar
+                        size={14}
+                        className="text-cyan-200/80"
+                      />
+
+                      <span>
+                        {project.duration}
+                      </span>
+                    </div>
+
+                    {/* Separator */}
+                    <span
+                      className="
+                        h-1
+                        w-1
+                        rounded-full
+                        bg-white/25
+                      "
+                    />
+
+                    {/* Team */}
+                    <div className="flex items-center gap-1.5">
+                      <Users
+                        size={14}
+                        className="text-cyan-200/80"
+                      />
+
+                      <span>
+                        {project.team_size}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* ==================================================== */}
+                  {/*                    CATEGORY / TYPE                   */}
+                  {/* ==================================================== */}
+
+                  <div
+                    className="
+                      mt-auto
+                      flex
+                      items-center
+                      justify-between
+                      gap-3
+                      border-t
+                      border-white/[0.07]
+                      pt-4
+                    "
+                  >
+                    <div className="flex flex-wrap gap-2">
+
+                      {/* Category */}
+                      <span
+                        className="
+                          rounded-md
+                          bg-white/[0.055]
+                          px-2
+                          py-1
+                          text-[10px]
+                          font-medium
+                          uppercase
+                          tracking-wide
+                          text-white/55
+                        "
+                      >
+                        {project.category}
+                      </span>
+
+                      {/* Type */}
+                      <span
+                        className="
+                          rounded-md
+                          bg-white/[0.055]
+                          px-2
+                          py-1
+                          text-[10px]
+                          font-medium
+                          uppercase
+                          tracking-wide
+                          text-white/55
+                        "
+                      >
+                        {project.type}
+                      </span>
+                    </div>
+
+                    <ArrowUpRight
+                      size={16}
+                      className="
+                        shrink-0
+                        text-white/35
+                        transition-all
+                        duration-300
+                        group-hover:-translate-y-0.5
+                        group-hover:translate-x-0.5
+                        group-hover:text-violet-300
+                      "
                     />
                   </div>
-                )}
-                {lightbox.open && (
-                  <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={() => setLightbox({ open: false, img: null })}>
-                    <img src={lightbox.img!} alt="Full Size" className="max-w-[90vw] max-h-[90vh] rounded-2xl shadow-2xl border-4 border-white object-contain" />
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {selectedProject.tech.map((tech: string, techIndex: number) => (
-                  <span key={techIndex} className="bg-pink-600/10 text-pink-700 dark:text-pink-300 px-3 py-1 text-xs rounded-full font-medium">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-            {/* Right: Details */}
-            <div className="flex-1 p-6 flex flex-col gap-4 overflow-y-auto" style={{ maxHeight: '92vh' }}>
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-2">
-                <h3 className="text-3xl font-bold text-zinc-900 dark:text-white mb-1">{selectedProject.title}</h3>
-                <span className={`px-3 py-1 text-sm rounded-full font-semibold shadow ${selectedProject.status === 'Live Production' ? 'bg-green-500/90 text-white' : selectedProject.status === 'In Development' ? 'bg-yellow-500/90 text-white' : 'bg-blue-500/90 text-white'}`}>{selectedProject.status}</span>
-              </div>
-              <p className="text-lg text-zinc-700 dark:text-zinc-200 mb-2">{selectedProject.short_description}</p>
-              <div className="flex flex-wrap gap-3 text-xs text-zinc-500 dark:text-zinc-400 mb-2">
-                <span className="flex items-center gap-1"><Calendar size={14} /> {selectedProject.duration}</span>
-                <span className="flex items-center gap-1"><Users size={14} /> {selectedProject.team_size}</span>
-                <span className="flex items-center gap-1 font-medium">{selectedProject.category}</span>
-                <span className="flex items-center gap-1 font-medium">{selectedProject.type}</span>
-              </div>
-              <div className="flex flex-wrap gap-2 mb-2">
-                {selectedProject.links?.map((item: any, index: any) => (
-                  <a
-                    key={index}
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={e => e.stopPropagation()}
-                  >
-                    <Button variant="secondary" size="sm" className="flex items-center gap-2">
-                      <ExternalLink size={14} />
-                      <span>{item.name}</span>
-                    </Button>
-                  </a>
-                ))}
-              </div>
-              <div className="mb-4">
-                <h4 className="text-xl font-semibold mb-2 text-zinc-900 dark:text-white">Project Overview</h4>
-                <p className="text-zinc-700 dark:text-zinc-200 leading-relaxed">{selectedProject.description}</p>
-              </div>
-              {selectedProject.features && (
-                <div className="mb-2">
-                  <h4 className="text-lg font-semibold mb-2 text-zinc-900 dark:text-white">Key Features</h4>
-                  <ul className="grid md:grid-cols-2 gap-2 list-disc list-inside">
-                    {selectedProject.features.map((feature: string, index: number) => (
-                      <li key={index} className="text-sm text-zinc-700 dark:text-zinc-200">{feature}</li>
-                    ))}
-                  </ul>
                 </div>
-              )}
-              {selectedProject.achievements && (
-                <div className="mb-2">
-                  <h4 className="text-lg font-semibold mb-2 flex items-center gap-2 text-zinc-900 dark:text-white"><Award size={20} />Achievements</h4>
-                  <ul className="grid md:grid-cols-2 gap-2 list-disc list-inside">
-                    {selectedProject.achievements.map((achievement: string, index: number) => (
-                      <li key={index} className="text-sm text-green-700 dark:text-green-300">{achievement}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {selectedProject.platforms && (
-                <div className="mb-2">
-                  <h4 className="text-lg font-semibold mb-2 text-zinc-900 dark:text-white">Platform Architecture</h4>
-                  <div className="grid gap-4">
-                    {Object.entries(selectedProject.platforms).map(([key, platform]: [string, any]) => (
-                      <div key={key} className="bg-zinc-100 dark:bg-zinc-800 rounded-xl p-4">
-                        <h5 className="font-semibold mb-2">{platform.name}</h5>
-                        <p className="text-sm text-zinc-600 dark:text-zinc-300 mb-3">{platform.description}</p>
-                        <ul className="grid md:grid-cols-2 gap-1 list-disc list-inside">
-                          {platform.features.slice(0, 6).map((feature: string, index: number) => (
-                            <li key={index} className="text-xs text-zinc-700 dark:text-zinc-200">{feature}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-    </section>
-  )
-}
 
-export default Projects
+                {/* ====================================================== */}
+                {/*                    BOTTOM ACCENT                       */}
+                {/* ====================================================== */}
+
+                <div
+                  className="
+                    absolute
+                    bottom-0
+                    left-1/2
+                    h-px
+                    w-0
+                    -translate-x-1/2
+                    bg-gradient-to-r
+                    from-transparent
+                    via-violet-400
+                    to-transparent
+                    transition-all
+                    duration-500
+                    group-hover:w-2/3
+                  "
+                />
+              </motion.article>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default Projects;

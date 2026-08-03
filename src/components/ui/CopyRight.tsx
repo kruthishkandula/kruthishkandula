@@ -1,9 +1,9 @@
 const Copyright = () => {
     return (
-        <footer id="copyright" className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-            <div className="container mx-auto px-6">
+        <footer className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 w-full h-full flex flex-col">
+            <div className="container mx-auto px-6 flex-1 flex flex-col justify-between py-8">
                 {/* Main Footer Content */}
-                <div className="py-8 grid md:grid-cols-4 gap-8">
+                <div className="grid md:grid-cols-4 gap-8">
                     <div className="md:col-span-2">
                         <h3 className="font-bold text-lg mb-3">Kruthish Kandula</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
@@ -32,7 +32,7 @@ const Copyright = () => {
                 </div>
 
                 {/* Copyright Bar */}
-                <div className="border-t border-slate-200 dark:border-slate-700 py-4">
+                <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
                     <div className="flex flex-col md:flex-row items-center justify-between">
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             © 2025 Kruthish Kandula. All rights reserved. |

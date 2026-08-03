@@ -3,14 +3,14 @@
 const SimpleBadgeScroll = () => {
   const badges = [
     "Senior Full-Stack Engineer",
-    "3+ Years Experience", 
+    "4+ Years Experience", 
     "React Native Expert",
     "Team Lead - 8 Developers",
-    "2M+ Users Served",
+    "5M+ Users Served",
     "$50M+ Monthly Transactions",
     "Module Federation Specialist",
     "FinTech Developer",
-    "5 African Markets",
+    "8 African Markets",
     "Next.js & Node.js",
     "TypeScript Expert",
     "Mobile Banking Solutions"
@@ -26,7 +26,7 @@ const SimpleBadgeScroll = () => {
             {badges.map((badge, index) => (
               <div 
                 key={`first-${index}`}
-                className="badge-item px-4 py-2 bg-green-600/10 text-green-600 rounded-full whitespace-nowrap text-sm font-medium border border-green-600/20 hover:bg-green-600/20 transition-colors"
+                className="badge-item px-4 py-2 bg-yellow-600/10 text-yellow-300 rounded-full whitespace-nowrap text-sm font-medium border border-yellow-600/20 hover:bg-yellow-600/20 transition-colors"
               >
                 {badge}
               </div>
