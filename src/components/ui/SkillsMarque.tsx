@@ -271,7 +271,7 @@ const SkillsMarquee = () => {
         md:py-10
       "
     >
-      {/* Background glow */}
+      {/* Background glow - optimized */}
       <div
         className="
           pointer-events-none
@@ -280,8 +280,7 @@ const SkillsMarquee = () => {
           h-[300px] w-[70%]
           -translate-x-1/2 -translate-y-1/2
           rounded-full
-          bg-violet-500/[0.04]
-          blur-3xl
+          bg-violet-500/[0.02]
         "
       />
 

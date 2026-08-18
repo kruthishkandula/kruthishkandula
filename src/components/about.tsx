@@ -25,13 +25,11 @@ const itemVariants = {
   hidden: {
     opacity: 0,
     y: 28,
-    filter: 'blur(6px)',
   },
 
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
 
     transition: {
       duration: 0.65,
@@ -114,7 +112,7 @@ const About = () => {
   return (
     <section
       id="about"
-      className="min-h-screen px-6 pb-20 pt-0"
+      className="min-h-screen px-3 md:px-6 pb-10 pt-10"
     >
       <div className="container mx-auto">
 

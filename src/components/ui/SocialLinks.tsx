@@ -56,7 +56,7 @@ const socialLinks: SocialLink[] = [
     icon: FaGithub,
     url: 'https://github.com/kruthishkandula',
     color: '#181717',
-    darkColor: '#FFFFFF',
+    darkColor: 'rgb(24, 23, 23)',
     label: 'GitHub',
     openInNewTab: true,
   },
@@ -160,10 +160,6 @@ const SocialLinks = ({
   /* ------------------------------------------------------------------------ */
 
   const getIconColor = (link: SocialLink): string => {
-    if (resolvedTheme === 'dark' && link.darkColor) {
-      return link.darkColor;
-    }
-
     return link.color;
   };
 
@@ -304,10 +300,9 @@ const SocialLinks = ({
                   inset-1
                   rounded-lg
                   bg-violet-400/0
-                  blur-lg
                   transition-colors
                   duration-300
-                  group-hover:bg-violet-400/[0.08]
+                  group-hover:bg-violet-400/[0.12]
                 "
               />
 
@@ -418,12 +413,8 @@ const SocialLinks = ({
             w-32
             -translate-x-1/2
             -translate-y-1/2
-            rounded-full
-            bg-violet-400/[0.06]
-            blur-2xl
             transition-all
             duration-300
-            group-hover:bg-violet-400/[0.12]
           "
         />
 

@@ -33,8 +33,8 @@ const containerVariants = {
 
   visible: {
     transition: {
-      staggerChildren: 0.13,
-      delayChildren: 0.15,
+      staggerChildren: 0.08,
+      delayChildren: 0,
     },
   },
 };
@@ -43,13 +43,11 @@ const itemVariants = {
   hidden: {
     opacity: 0,
     y: 24,
-    filter: 'blur(5px)',
   },
 
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
 
     transition: {
       duration: 0.7,
@@ -63,14 +61,12 @@ const nameVariants = {
     opacity: 0,
     y: 30,
     scale: 0.97,
-    filter: 'blur(8px)',
   },
 
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
 
     transition: {
       duration: 0.8,
@@ -177,10 +173,11 @@ const Home = ({
         relative
         flex
         min-h-screen
-        items-center
-        justify-center
+        items-start
+        justify-start
         overflow-hidden
-        px-6
+        px-3
+        md:px-6
         py-5
       "
     >
@@ -199,8 +196,9 @@ const Home = ({
           -translate-x-1/2
           -translate-y-1/2
           rounded-full
-          bg-violet-500/[0.07]
-          blur-[130px]
+          bg-gradient-to-b
+          from-violet-500/[0.08]
+          to-transparent
         "
       />
 
@@ -213,8 +211,9 @@ const Home = ({
           h-[280px]
           w-[280px]
           rounded-full
-          bg-cyan-400/[0.035]
-          blur-[100px]
+          bg-gradient-radial
+          from-cyan-400/[0.04]
+          to-transparent
         "
       />
 
@@ -261,8 +260,9 @@ const Home = ({
             h-[220px]
             w-[55%]
             -translate-x-1/2
-            bg-violet-400/[0.055]
-            blur-[100px]
+            bg-gradient-to-b
+            from-violet-400/[0.06]
+            to-transparent
           "
         />
 

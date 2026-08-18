@@ -5,8 +5,7 @@ import Contact from '@/components/contact'
 import Home from '@/components/home'
 import Projects from '@/components/projects'
 import ProjectModal from '@/components/ui/project-modal'
-import { ModeToggle } from '@/components/ui/theme/mode-toggle'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { GoPerson } from 'react-icons/go'
 import { GrContact, GrProjects } from 'react-icons/gr'
 import { RxHome } from "react-icons/rx"
@@ -24,6 +23,7 @@ export default function Dashboard() {
   const [isResumeOpen, setIsResumeOpen] = useState(false)
   const [iframeLoaded, setIframeLoaded] = useState(false)
   const [iframeError, setIframeError] = useState(false)
+  const scrollTimeoutRef = useRef<NodeJS.Timeout>()
 
   const scrollToSection = (index: number) => {
     const container = containerRef.current
@@ -39,55 +39,56 @@ export default function Dashboard() {
     }
   }
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     const container = containerRef.current
     if (!container) return
 
     const sections = container.querySelectorAll(':scope > section')
     let current = 0
 
-    sections.forEach((section, index) => {
+    for (let index = 0; index < sections.length; index++) {
+      const section = sections[index]
       const rect = section.getBoundingClientRect()
       const containerRect = container.getBoundingClientRect()
       const relativeTop = rect.top - containerRect.top
       if (relativeTop <= container.clientHeight / 2) {
         current = index
       }
-    })
+    }
 
     setActiveSection(current)
-  }
+  }, [])
+
+  const throttledScroll = useCallback(() => {
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current)
+    scrollTimeoutRef.current = setTimeout(handleScroll, 100)
+  }, [handleScroll])
 
   useEffect(() => {
     const container = containerRef.current
     if (container) {
-      container.addEventListener('scroll', handleScroll)
-      return () => container.removeEventListener('scroll', handleScroll)
+      container.addEventListener('scroll', throttledScroll, { passive: true })
+      return () => {
+        container.removeEventListener('scroll', throttledScroll)
+        if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current)
+      }
     }
-  }, [])
+  }, [throttledScroll])
 
   return (
     <div
-      className="fixed inset-0 overflow-hidden"
+      className="fixed inset-0 overflow-hidden bg-black"
       style={{
         backgroundImage: 'url(/bg2.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
-        padding: '20px 80px',
         boxSizing: 'border-box',
       }}
     >
-      {/* Premium Color Overlay */}
-      {/* Blurred Background Image Layer */}
-      <div className="fixed inset-0 pointer-events-none" style={{
-        backgroundImage: 'url(/bg2.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-        filter: 'blur(100px)',
+      {/* Simple color overlay instead of blurred background */}
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/30 via-black/40 to-black/50" style={{
         zIndex: 0
       }} />
       {/* Scrollable Content Container */}
@@ -95,12 +96,10 @@ export default function Dashboard() {
         ref={containerRef}
         className="relative overflow-y-auto scroll-smooth z-20"
         style={{
-          height: 'calc(100vh - 40px)',
+          height: 'calc(100vh - 0px)',
           scrollSnapType: 'y mandatory',
           border: '1px solid transparent',
-          borderRadius: '30px',
-          backdropFilter: 'blur(8px)',
-          boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37), inset 0 0 32px rgba(99, 102, 241, 0.1)'
+          contain: 'paint layout',
         }}
       >
         <section id="home" className="min-h-screen">
@@ -129,10 +128,6 @@ export default function Dashboard() {
             }}
           />
         </section>
-
-        {/* <section id="copyright" className="min-h-screen">
-          <Copyright />
-        </section> */}
       </div>
 
       {/* Fixed Navigation Bar */}
@@ -158,11 +153,6 @@ export default function Dashboard() {
           </button>
         ))}
       </nav>
-
-      {/* Theme Toggle */}
-      <div className="md:hidden fixed top-10 right-10 z-40">
-        <ModeToggle />
-      </div>
 
       {/* Project Modal - Rendered at top level */}
       {isModalOpen && selectedProject && (

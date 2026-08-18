@@ -37,13 +37,11 @@ const itemVariants = {
   hidden: {
     opacity: 0,
     y: 24,
-    filter: 'blur(5px)',
   },
 
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
 
     transition: {
       duration: 0.65,
@@ -86,8 +84,10 @@ const Contact = ({
       id="contact"
       className="
         min-h-[75vh]
-        px-6
-        py-20
+        px-3
+        md:px-6
+        pt-10
+        pb-20
       "
     >
       <div className="container mx-auto">
@@ -135,8 +135,9 @@ const Contact = ({
               -translate-x-1/2
               -translate-y-1/2
               rounded-full
-              bg-violet-500/[0.055]
-              blur-[100px]
+              bg-gradient-to-b
+              from-violet-500/[0.08]
+              to-transparent
             "
           />
 
@@ -149,8 +150,9 @@ const Contact = ({
               h-[250px]
               w-[250px]
               rounded-full
-              bg-cyan-400/[0.035]
-              blur-[90px]
+              bg-gradient-radial
+              from-cyan-400/[0.05]
+              to-transparent
             "
           />
 
@@ -335,47 +337,6 @@ const Contact = ({
                 onResumeClose={onResumeClose}
               />
             </motion.div>
-
-            {/* ---------------------------------------------------------- */}
-            {/*                      AVAILABILITY                          */}
-            {/* ---------------------------------------------------------- */}
-
-            <motion.div
-              variants={itemVariants}
-              className="
-                mt-8
-                flex
-                items-center
-                gap-2
-                rounded-full
-                border
-                border-white/[0.08]
-                bg-white/[0.04]
-                px-4
-                py-2
-                backdrop-blur-md
-              "
-            >
-              <span
-                className="
-                  h-2
-                  w-2
-                  rounded-full
-                  bg-green-600
-                  shadow-[0_0_9px_rgba(52,211,153,0.75)]
-                "
-              />
-
-              <span
-                className="
-                  text-xs
-                  font-medium
-                  text-white/60
-                "
-              >
-                Open to new opportunities
-              </span>
-            </motion.div>
           </div>
 
           {/* ============================================================ */}
@@ -397,6 +358,48 @@ const Contact = ({
               to-transparent
             "
           />
+
+          {/* ============================================================ */}
+          {/*              OPEN TO OPPORTUNITIES BADGE                     */}
+          {/* ============================================================ */}
+
+          <div
+            className="
+              absolute
+              top-8
+              flex
+              items-center
+              gap-3
+              rounded-full
+              border
+              border-emerald-400/20
+              bg-emerald-400/[0.08]
+              px-5
+              py-3
+              backdrop-blur-md
+              lg:right-12
+            "
+          >
+            <span
+              className="
+                  h-2
+                  w-2
+                  rounded-full
+                  bg-green-600
+                  shadow-[0_0_9px_rgba(52,211,153,0.75)]
+                "
+            />
+
+            <span
+              className="
+                  text-xs
+                  font-medium
+                  text-white/80
+                "
+            >
+              Open to new opportunities
+            </span>
+          </div>
         </motion.div>
       </div>
     </section>

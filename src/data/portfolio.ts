@@ -105,6 +105,51 @@ export const ProjectsData = [
         ]
     },
     {
+        id: 1,
+        title: "MyMTN - Telecom Management",
+        short_description: "Comprehensive telecom self-care app for managing MTN mobile services",
+        description: "MyMTN is an enterprise-grade telecom self-care application that empowers users to manage their mobile subscriptions, data plans, and billing with ease. The platform provides real-time balance checking, plan management, usage analytics, and seamless bill payment integration. It serves as the primary channel for telecom customers to control their accounts, purchase plans, and track consumption patterns. The app features personalized notifications, promotional offers, and 24/7 customer support integration.",
+        category: "Telecom Management",
+        type: "Telecom Self-Care",
+        imageUrl: "https://play-lh.googleusercontent.com/ivbEPxeYTnSJMP5czZfieCGk1CzM5vaNK4ORNlcslrxsztf3BDQkiZtF0hAGkeo8OnM7IZa5S0o2UP02gdHjxw=w5120-h2880-rw",
+        status: "Live Production",
+        duration: "Jul 2023 - Dec 2023",
+        role: "Senior Mobile Engineer",
+        team_size: "6 developers",
+        links: [
+            {
+                name: 'iOS App Store',
+                link: 'https://apps.apple.com/app/mymtn/id1234567890',
+                type: 'store'
+            },
+            {
+                name: 'Google Play Store',
+                link: 'https://play.google.com/store/apps/details?id=com.mtn.myapp',
+                type: 'store'
+            }
+        ],
+        tech: ["React Native", "TypeScript", "Redux", "Firebase", "Node.js", "PostgreSQL", "GraphQL", "React Query", "Repack", "Jest", "Tailwind CSS", "Telecom APIs"],
+        features: [
+            "Real-time balance & usage tracking",
+            "Plan management & switching",
+            "Bill payment integration",
+            "Usage analytics & insights",
+            "Plan recommendations engine",
+            "Device management",
+            "Promotional offers display",
+            "24/7 support chat integration",
+            "Push notifications for bill reminders",
+            "Account security settings"
+        ],
+        achievements: [
+            "Serving 1M+ active users",
+            "4.5+ rating on app stores",
+            "99.95% uptime",
+            "Reduced customer support tickets by 40%",
+            "Fastest mobile plan switching (under 2 seconds)"
+        ]
+    },
+    {
         id: 11,
         title: "RupeeFlow",
         short_description: "Personal finance and expense tracking app built as a passion project to explore modern fintech UI/UX and mobile development.",
@@ -152,7 +197,7 @@ export const ProjectsData = [
         ]
     },
     {
-        id: 1,
+        id: 2,
         title: "GroceryPlus - Smart Grocery Delivery",
         short_description: "Comprehensive grocery delivery platform with multi-platform architecture",
         description: "GroceryPlus is a full-stack e-commerce solution that revolutionizes grocery shopping through seamless mobile and web experiences. The platform features real-time inventory management, AI-powered product recommendations, scheduled deliveries, and integrated payment systems. It consists of three interconnected applications: customer mobile app, delivery partner app, and comprehensive admin web portal, all powered by modern microservices architecture.",
@@ -203,7 +248,7 @@ export const ProjectsData = [
         ]
     },
     {
-        id: 2,
+        id: 3,
         title: "IPL Cricket Dashboard",
         short_description: "Interactive dashboard showcasing IPL teams, matches, and player statistics",
         description: "A comprehensive cricket analytics dashboard that provides detailed insights into IPL teams, match results, and player performance statistics. The application features dynamic team pages, match history, player profiles, and statistical analysis with interactive charts and real-time data visualization. Built with modern React architecture and responsive design for optimal user experience across devices.",
@@ -238,7 +283,7 @@ export const ProjectsData = [
         ]
     },
     {
-        id: 3,
+        id: 4,
         title: "Emoji Memory Game",
         short_description: "Interactive memory game challenging users to identify unique emojis",
         description: "An engaging memory-based game application where users test their memory skills by selecting non-identical emojis from a randomized grid. The game features progressive difficulty levels, score tracking, timer functionality, and animated interactions. Built with React hooks for state management and includes sound effects, visual feedback, and responsive design for seamless gameplay across all devices.",
@@ -273,7 +318,7 @@ export const ProjectsData = [
         ]
     },
     {
-        id: 4,
+        id: 5,
         title: "Cultural Events Registration Portal",
         short_description: "Event management system for cultural and dance event registrations",
         description: "A comprehensive event management platform designed for organizing and managing cultural events, dance competitions, and similar activities. The application enables event organizers to create events, manage registrations, track participants, and handle event logistics. Features include participant registration forms, event scheduling, notification systems, and detailed reporting for event analytics and management.",
@@ -308,7 +353,7 @@ export const ProjectsData = [
         ]
     },
     {
-        id: 5,
+        id: 6,
         title: "Smart Appointment Scheduler",
         short_description: "Digital appointment management system with scheduling and reminder features",
         description: "An intelligent appointment scheduling application that simplifies the process of booking, managing, and tracking appointments. The system features calendar integration, automated reminders, conflict detection, and multi-user support. Designed for healthcare providers, service professionals, and businesses requiring efficient appointment management with real-time availability updates and customer notification systems.",
@@ -343,7 +388,7 @@ export const ProjectsData = [
         ]
     },
     {
-        id: 6,
+        id: 7,
         title: "Personal Finance Manager",
         short_description: "Comprehensive expense tracking and savings management application",
         description: "A personal finance management application that helps users track expenses, manage savings, set financial goals, and analyze spending patterns. The application provides detailed insights through interactive charts, budget planning tools, category-wise expense breakdown, and financial goal tracking. Features include transaction categorization, monthly/yearly reports, and personalized financial recommendations for better money management.",

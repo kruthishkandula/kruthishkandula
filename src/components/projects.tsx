@@ -43,13 +43,11 @@ const headingVariants = {
   hidden: {
     opacity: 0,
     y: 20,
-    filter: "blur(4px)",
   },
 
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
 
     transition: {
       duration: 0.6,
@@ -63,14 +61,12 @@ const cardVariants = {
     opacity: 0,
     y: 35,
     scale: 0.97,
-    filter: "blur(6px)",
   },
 
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: "blur(0px)",
 
     transition: {
       duration: 0.65,
@@ -214,8 +210,9 @@ const Projects = ({
       id="projects"
       className="
         min-h-screen
-        px-6
-        py-20
+        px-3
+        md:px-6
+        py-10
       "
     >
       <div className="container mx-auto">
